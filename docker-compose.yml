@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  cambodia-logistics-bot:
+    build: .
+    container_name: cambodia_logistics_bot
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ./cambodia_logistics.db:/app/cambodia_logistics.db
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DEFAULT_LANGUAGE=trilingual

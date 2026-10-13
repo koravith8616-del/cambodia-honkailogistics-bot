@@ -1,0 +1,29 @@
+# Environment & sensitive credentials
+.env
+*.env
+
+# Python virtual environment
+.venv/
+venv/
+ENV/
+env/
+
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# SQLite Database files (contain runtime subscriber IDs)
+*.db
+*.sqlite
+*.sqlite3
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE & Editor folders
+.vscode/
+.idea/
+*.swp

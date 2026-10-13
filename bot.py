@@ -1,0 +1,476 @@
+import asyncio
+import logging
+import sys
+from typing import Optional
+
+# Reconfigure stdout/stderr for Unicode (Khmer & emojis) on Windows consoles
+if sys.platform == "win32":
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
+    if hasattr(sys.stderr, "reconfigure"):
+        sys.stderr.reconfigure(encoding="utf-8")
+
+
+from telegram import (
+    Update,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    constants
+)
+from telegram.ext import (
+    Application,
+    CommandHandler,
+    CallbackQueryHandler,
+    ContextTypes,
+    MessageHandler,
+    filters
+)
+
+from config import (
+    TELEGRAM_BOT_TOKEN,
+    TELEGRAM_CHANNEL_ID,
+    ADMIN_USER_IDS,
+    DEFAULT_LANGUAGE
+)
+from database import (
+    init_db,
+    add_subscriber,
+    remove_subscriber,
+    set_subscriber_language,
+    get_subscribers,
+    get_all_indicators,
+    log_post,
+    is_post_duplicate
+)
+from research_engine import LogisticsResearchEngine
+from photo_curator import get_action_photo_for_topic
+from formatter import (
+    format_intelligence_post,
+    format_rate_index,
+    format_port_status,
+    format_customs_guide,
+    format_factory_supply_chain
+)
+
+logging.basicConfig(
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    level=logging.INFO
+)
+logger = logging.getLogger(__name__)
+
+research_engine = LogisticsResearchEngine()
+
+
+def get_main_keyboard() -> InlineKeyboardMarkup:
+    """Builds interactive inline keyboard for logistics portal."""
+    keyboard = [
+        [
+            InlineKeyboardButton("🚨 Latest Market Briefing", callback_data="btn_latest"),
+            InlineKeyboardButton("📈 Freight Rate Index", callback_data="btn_rates")
+        ],
+        [
+            InlineKeyboardButton("⚓ Ports (PAS & PPAP)", callback_data="btn_ports"),
+            InlineKeyboardButton("✈️ Air Cargo (TIA/PNH)", callback_data="btn_aircargo")
+        ],
+        [
+            InlineKeyboardButton("🚛 Highway & Trucking", callback_data="btn_trucking"),
+            InlineKeyboardButton("🏭 Factory Supply Chain", callback_data="btn_factories")
+        ],
+        [
+            InlineKeyboardButton("📋 Customs & GDCE", callback_data="btn_customs"),
+            InlineKeyboardButton("🌐 Switch Language", callback_data="btn_lang")
+        ],
+        [
+            InlineKeyboardButton("🔔 Toggle Auto-Digest", callback_data="btn_subscribe")
+        ]
+    ]
+    return InlineKeyboardMarkup(keyboard)
+
+
+# ==============================================================================
+# COMMAND HANDLERS
+# ==============================================================================
+
+async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Handles /start command with interactive welcome and role selection."""
+    user = update.effective_user
+    chat = update.effective_chat
+    
+    # Save subscriber in database
+    is_channel = chat.type in (constants.ChatType.CHANNEL, constants.ChatType.SUPERGROUP)
+    add_subscriber(
+        chat_id=chat.id,
+        username=user.username if user else None,
+        first_name=user.first_name if user else chat.title,
+        is_channel=is_channel,
+        language=DEFAULT_LANGUAGE
+    )
+
+    welcome_text = (
+        f"🇰🇭 <b>CAMBODIA LOGISTICS MARKET INTELLIGENCE BOT</b>\n"
+        f"<i>ព័ត៌មានភស្តុភារកម្ម ការដឹកជញ្ជូន និងទីផ្សារផ្គត់ផ្គង់កម្ពុជា</i>\n\n"
+        f"Hello <b>{user.first_name if user else 'Logistics Professional'}</b>! Welcome to your automated logistics intelligence assistant.\n\n"
+        f"<b>🎯 Designed for Cambodian Supply Chain Stakeholders:</b>\n"
+        f"• 🏭 <b>Garment & Footwear Factories:</b> Export schedules, container cut-offs & fabric imports\n"
+        f"• 📦 <b>Freight Forwarders & Brokers:</b> Feeder slot availability, carrier rates & GDCE customs\n"
+        f"• 🚢 <b>Carriers & Shipping Lines:</b> Sihanoukville (PAS) & Phnom Penh (PPAP) berth updates\n"
+        f"• ✈️ <b>Airlines & Air Freight GSAs:</b> Belly capacity, freighter flights & express rates\n"
+        f"• 🚛 <b>Trucking Companies:</b> PP-Sihanoukville Expressway tolls, Bavet & Poipet border status\n\n"
+        f"<i>Select an option below or type <code>/help</code> for quick commands:</i>"
+    )
+
+    await update.message.reply_html(
+        welcome_text,
+        reply_markup=get_main_keyboard(),
+        disable_web_page_preview=True
+    )
+
+
+async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Provides help documentation on all bot features."""
+    help_text = (
+        "📚 <b>BOT COMMAND DIRECTORY / ការណែនាំពាក្យបញ្ជា</b>\n\n"
+        "• <code>/latest</code> - Fresh market intelligence briefing with verified action photo\n"
+        "• <code>/rates</code> - Ocean container, air cargo & diesel rate indices\n"
+        "• <code>/ports</code> - Sihanoukville PAS & Phnom Penh PPAP operational status\n"
+        "• <code>/aircargo</code> - Air freight rates, capacity & airport terminal status\n"
+        "• <code>/trucking</code> - Expressway, Bavet-Moc Bai & Poipet trucking corridor\n"
+        "• <code>/factories</code> - GFT manufacturing, raw material flows & SEZ dry ports\n"
+        "• <code>/customs</code> - GDCE customs, ASYCUDA, CamDX & RCEP/GSP regulations\n"
+        "• <code>/research [topic]</code> - On-demand AI deep research on any logistics question\n"
+        "• <code>/subscribe</code> - Enable daily morning intelligence broadcast (08:00 AM ICT)\n"
+        "• <code>/unsubscribe</code> - Stop automated scheduled broadcasts\n"
+        "• <code>/lang</code> - Toggle language (Bilingual, English, Khmer)\n"
+    )
+    if update.effective_user and update.effective_user.id in ADMIN_USER_IDS:
+        help_text += "\n<b>👑 Admin Commands:</b>\n• <code>/broadcast [text]</code> - Broadcast urgent alert\n"
+
+    await update.message.reply_html(help_text)
+
+
+async def latest_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Sends the latest logistics intelligence update with a real action photo."""
+    chat_id = update.effective_chat.id
+    await context.bot.send_chat_action(chat_id=chat_id, action=constants.ChatAction.UPLOAD_PHOTO)
+
+    briefing = await research_engine.get_latest_market_briefing()
+    caption = format_intelligence_post(briefing, language_mode=DEFAULT_LANGUAGE)
+
+    # Log to database
+    log_post(
+        hash_key=briefing["hash_key"],
+        title=briefing["title_en"],
+        category=briefing["category"],
+        summary=briefing["summary_en"],
+        content=caption,
+        photo_url=briefing["photo_url"],
+        source_url="",
+        tags=",".join(briefing.get("tags", [])),
+        language=DEFAULT_LANGUAGE
+    )
+
+    try:
+        await context.bot.send_photo(
+            chat_id=chat_id,
+            photo=briefing["photo_url"],
+            caption=caption,
+            parse_mode=constants.ParseMode.HTML
+        )
+    except Exception as e:
+        logger.warning(f"Failed to send with photo ({e}), falling back to text message.")
+        await update.message.reply_html(caption, disable_web_page_preview=False)
+
+
+async def rates_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Displays latest freight rate benchmarks."""
+    indicators = get_all_indicators()
+    message = format_rate_index(indicators)
+    await update.message.reply_html(message)
+
+
+async def ports_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Displays Sihanoukville (PAS) and Phnom Penh (PPAP) port conditions with action photo."""
+    chat_id = update.effective_chat.id
+    photo_info = get_action_photo_for_topic("ocean_port", "PAS PPAP container port")
+    text = format_port_status()
+
+    try:
+        await context.bot.send_photo(
+            chat_id=chat_id,
+            photo=photo_info["url"],
+            caption=text,
+            parse_mode=constants.ParseMode.HTML
+        )
+    except Exception:
+        await update.message.reply_html(text)
+
+
+async def aircargo_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Displays Air cargo freight intelligence with action photo."""
+    chat_id = update.effective_chat.id
+    briefing = await research_engine.get_latest_market_briefing(category_filter="air")
+    photo_info = get_action_photo_for_topic("air_cargo", "air freight")
+    caption = format_intelligence_post(briefing, language_mode=DEFAULT_LANGUAGE)
+
+    try:
+        await context.bot.send_photo(
+            chat_id=chat_id,
+            photo=photo_info["url"],
+            caption=caption,
+            parse_mode=constants.ParseMode.HTML
+        )
+    except Exception:
+        await update.message.reply_html(caption)
+
+
+async def trucking_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Displays Highway, border gates and trucking corridor updates."""
+    chat_id = update.effective_chat.id
+    briefing = await research_engine.get_latest_market_briefing(category_filter="trucking")
+    photo_info = get_action_photo_for_topic("trucking_highway", "expressway border")
+    caption = format_intelligence_post(briefing, language_mode=DEFAULT_LANGUAGE)
+
+    try:
+        await context.bot.send_photo(
+            chat_id=chat_id,
+            photo=photo_info["url"],
+            caption=caption,
+            parse_mode=constants.ParseMode.HTML
+        )
+    except Exception:
+        await update.message.reply_html(caption)
+
+
+async def customs_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Displays Customs GDCE procedures and trade compliance."""
+    chat_id = update.effective_chat.id
+    photo_info = get_action_photo_for_topic("customs_inspection", "customs scanner")
+    text = format_customs_guide()
+
+    try:
+        await context.bot.send_photo(
+            chat_id=chat_id,
+            photo=photo_info["url"],
+            caption=text,
+            parse_mode=constants.ParseMode.HTML
+        )
+    except Exception:
+        await update.message.reply_html(text)
+
+
+async def factories_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Displays Factory supply chain & GFT manufacturing intelligence."""
+    chat_id = update.effective_chat.id
+    photo_info = get_action_photo_for_topic("factory_logistics", "factory garment stuffing")
+    text = format_factory_supply_chain()
+
+    try:
+        await context.bot.send_photo(
+            chat_id=chat_id,
+            photo=photo_info["url"],
+            caption=text,
+            parse_mode=constants.ParseMode.HTML
+        )
+    except Exception:
+        await update.message.reply_html(text)
+
+
+async def research_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Handles /research [query] on-demand deep market research."""
+    chat_id = update.effective_chat.id
+    query = " ".join(context.args).strip() if context.args else ""
+    if not query:
+        await update.message.reply_html(
+            "⚠️ <b>Please provide a research query:</b>\n"
+            "<i>Example:</i> <code>/research Funan Techo Canal impact on barge costs</code>\n"
+            "<i>Example:</i> <code>/research Sihanoukville port 14.5m draft deep berth completion date</code>\n"
+            "<i>Example:</i> <code>/research Air cargo rate forecast for garment export Q4</code>"
+        )
+        return
+
+    wait_msg = await update.message.reply_html(f"🔍 <b>Conducting deep research on:</b> <i>'{query}'</i>\n<i>Analyzing maritime, air, and customs data...</i>")
+    await context.bot.send_chat_action(chat_id=chat_id, action=constants.ChatAction.TYPING)
+
+    research_res = await research_engine.deep_research_topic(query)
+    caption = format_intelligence_post(research_res, language_mode=DEFAULT_LANGUAGE)
+
+    try:
+        await wait_msg.delete()
+    except Exception:
+        pass
+
+    try:
+        await context.bot.send_photo(
+            chat_id=chat_id,
+            photo=research_res["photo_url"],
+            caption=caption,
+            parse_mode=constants.ParseMode.HTML
+        )
+    except Exception as e:
+        logger.warning(f"Could not send research photo: {e}")
+        await update.message.reply_html(caption)
+
+
+async def subscribe_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Subscribes chat to daily logistics digests."""
+    chat = update.effective_chat
+    user = update.effective_user
+    add_subscriber(chat.id, user.username if user else None, user.first_name if user else chat.title)
+    await update.message.reply_html(
+        "✅ <b>Subscribed to Cambodia Logistics Daily Intelligence!</b>\n"
+        "You will automatically receive daily morning market briefings (08:00 AM ICT) and urgent operational alerts."
+    )
+
+
+async def unsubscribe_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Unsubscribes chat from automated broadcasts."""
+    remove_subscriber(update.effective_chat.id)
+    await update.message.reply_html("🔕 <b>You have unsubscribed from automated digests.</b> You can still use on-demand commands anytime!")
+
+
+async def lang_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Allows user to select language preference."""
+    keyboard = [
+        [
+            InlineKeyboardButton("🌐 🇰🇭+🇬🇧+🇨🇳 Trilingual (Khmer, English & Chinese)", callback_data="lang_trilingual"),
+        ],
+        [
+            InlineKeyboardButton("🇬🇧 English Only", callback_data="lang_en"),
+            InlineKeyboardButton("🇰🇭 ភាសាខ្មែរ (Khmer)", callback_data="lang_km")
+        ],
+        [
+            InlineKeyboardButton("🇨🇳 简体中文 (Chinese Only)", callback_data="lang_zh")
+        ]
+    ]
+    await update.message.reply_html(
+        "🌐 <b>Select Preferred Content Language / ជ្រើសរើសភាសា / 语言偏好设置：</b>",
+        reply_markup=InlineKeyboardMarkup(keyboard)
+    )
+
+
+# ==============================================================================
+# INLINE CALLBACK HANDLERS
+# ==============================================================================
+
+async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Handles button callbacks from interactive menus."""
+    query = update.callback_query
+    await query.answer()
+
+    data = query.data
+    chat_id = update.effective_chat.id
+
+    if data == "btn_latest":
+        briefing = await research_engine.get_latest_market_briefing()
+        caption = format_intelligence_post(briefing, language_mode=DEFAULT_LANGUAGE)
+        try:
+            await context.bot.send_photo(
+                chat_id=chat_id,
+                photo=briefing["photo_url"],
+                caption=caption,
+                parse_mode=constants.ParseMode.HTML
+            )
+        except Exception:
+            await query.message.reply_html(caption)
+
+    elif data == "btn_rates":
+        indicators = get_all_indicators()
+        await query.message.reply_html(format_rate_index(indicators))
+
+    elif data == "btn_ports":
+        photo_info = get_action_photo_for_topic("ocean_port", "port")
+        text = format_port_status()
+        try:
+            await context.bot.send_photo(chat_id=chat_id, photo=photo_info["url"], caption=text, parse_mode=constants.ParseMode.HTML)
+        except Exception:
+            await query.message.reply_html(text)
+
+    elif data == "btn_aircargo":
+        photo_info = get_action_photo_for_topic("air_cargo", "air cargo")
+        briefing = await research_engine.get_latest_market_briefing(category_filter="air")
+        caption = format_intelligence_post(briefing, language_mode=DEFAULT_LANGUAGE)
+        try:
+            await context.bot.send_photo(chat_id=chat_id, photo=photo_info["url"], caption=caption, parse_mode=constants.ParseMode.HTML)
+        except Exception:
+            await query.message.reply_html(caption)
+
+    elif data == "btn_trucking":
+        photo_info = get_action_photo_for_topic("trucking_highway", "trucking")
+        briefing = await research_engine.get_latest_market_briefing(category_filter="trucking")
+        caption = format_intelligence_post(briefing, language_mode=DEFAULT_LANGUAGE)
+        try:
+            await context.bot.send_photo(chat_id=chat_id, photo=photo_info["url"], caption=caption, parse_mode=constants.ParseMode.HTML)
+        except Exception:
+            await query.message.reply_html(caption)
+
+    elif data == "btn_factories":
+        photo_info = get_action_photo_for_topic("factory_logistics", "factory")
+        text = format_factory_supply_chain()
+        try:
+            await context.bot.send_photo(chat_id=chat_id, photo=photo_info["url"], caption=text, parse_mode=constants.ParseMode.HTML)
+        except Exception:
+            await query.message.reply_html(text)
+
+    elif data == "btn_customs":
+        photo_info = get_action_photo_for_topic("customs_inspection", "customs")
+        text = format_customs_guide()
+        try:
+            await context.bot.send_photo(chat_id=chat_id, photo=photo_info["url"], caption=text, parse_mode=constants.ParseMode.HTML)
+        except Exception:
+            await query.message.reply_html(text)
+
+    elif data == "btn_lang":
+        await lang_command(update, context)
+
+    elif data == "btn_subscribe":
+        add_subscriber(chat_id, None, None)
+        await query.message.reply_html("🔔 <b>Notification preference updated:</b> You are actively subscribed to automated market intelligence digests!")
+
+    elif data.startswith("lang_"):
+        chosen_lang = data.split("_")[1]
+        set_subscriber_language(chat_id, chosen_lang)
+        await query.edit_message_text(f"✅ Language updated to <b>{chosen_lang.upper()}</b>.", parse_mode=constants.ParseMode.HTML)
+
+
+# ==============================================================================
+# BOT FACTORY / INITIALIZATION
+# ==============================================================================
+
+def create_bot_app() -> Application:
+    """Builds and configures the Telegram Application instance."""
+    init_db()
+
+    if not TELEGRAM_BOT_TOKEN:
+        raise ValueError("TELEGRAM_BOT_TOKEN is not configured! Please provide it in .env or environment variable.")
+
+    app = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
+
+    # Register command handlers
+    app.add_handler(CommandHandler("start", start_command))
+    app.add_handler(CommandHandler("help", help_command))
+    app.add_handler(CommandHandler("latest", latest_command))
+    app.add_handler(CommandHandler("rates", rates_command))
+    app.add_handler(CommandHandler("ports", ports_command))
+    app.add_handler(CommandHandler("aircargo", aircargo_command))
+    app.add_handler(CommandHandler("trucking", trucking_command))
+    app.add_handler(CommandHandler("customs", customs_command))
+    app.add_handler(CommandHandler("factories", factories_command))
+    app.add_handler(CommandHandler("research", research_command))
+    app.add_handler(CommandHandler("subscribe", subscribe_command))
+    app.add_handler(CommandHandler("unsubscribe", unsubscribe_command))
+    app.add_handler(CommandHandler("lang", lang_command))
+
+    # Register inline callbacks
+    app.add_handler(CallbackQueryHandler(callback_handler))
+
+    return app
+
+if __name__ == "__main__":
+    init_db()
+    if not TELEGRAM_BOT_TOKEN:
+        print("[!] TELEGRAM_BOT_TOKEN is not set. Please set it in .env before running the live polling bot.")
+        print("[!] You can test all research, photo selection, and post formatting by running: python test_runner.py")
+    else:
+        print("[*] Starting Cambodia Logistics Telegram Bot in Polling Mode...")
+        app = create_bot_app()
+        app.run_polling()
