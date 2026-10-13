@@ -505,10 +505,31 @@ async def channel_post_handler(update: Update, context: ContextTypes.DEFAULT_TYP
 
 async def post_now_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Instantly triggers an automated market intelligence dispatch with real action photo."""
-    chat_id = update.effective_chat.id
+    chat = update.effective_chat
+    chat_id = chat.id
+    # Auto-save this chat (Group, Channel, or User) to subscribers for all future scheduled broadcasts!
+    add_subscriber(
+        chat_id=chat_id,
+        username=chat.username,
+        first_name=chat.title or (update.effective_user.first_name if update.effective_user else "Subscriber"),
+        is_channel=(chat.type in (constants.ChatType.CHANNEL, constants.ChatType.GROUP, constants.ChatType.SUPERGROUP)),
+        language=DEFAULT_LANGUAGE
+    )
     briefing = await research_engine.get_latest_market_briefing()
     caption = format_intelligence_post(briefing, language_mode=DEFAULT_LANGUAGE)
     await send_briefing_response(context.bot, chat_id, briefing, caption)
+
+async def group_message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Auto-registers group whenever any message is sent in the group."""
+    chat = update.effective_chat
+    if chat and chat.type in (constants.ChatType.GROUP, constants.ChatType.SUPERGROUP):
+        add_subscriber(
+            chat_id=chat.id,
+            username=chat.username,
+            first_name=chat.title,
+            is_channel=True,
+            language=DEFAULT_LANGUAGE
+        )
 
 async def forward_link_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Detects forwarded messages from channels or groups and links them automatically."""
@@ -613,6 +634,7 @@ def create_bot_app() -> Application:
     # Auto-link channels and groups (via ChatMember update, channel posts, or forwarded messages)
     app.add_handler(ChatMemberHandler(my_chat_member_handler, ChatMemberHandler.MY_CHAT_MEMBER))
     app.add_handler(MessageHandler(filters.ChatType.CHANNEL, channel_post_handler))
+    app.add_handler(MessageHandler(filters.ChatType.GROUPS, group_message_handler))
     app.add_handler(MessageHandler(filters.FORWARDED, forward_link_handler))
 
     # Register inline callbacks
