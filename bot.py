@@ -63,26 +63,26 @@ research_engine = LogisticsResearchEngine()
 
 
 def get_main_keyboard() -> InlineKeyboardMarkup:
-    """Builds interactive inline keyboard for logistics portal."""
+    """Builds interactive inline keyboard with executive icons and multilingual labels."""
     keyboard = [
         [
-            InlineKeyboardButton("🚨 Latest Market Briefing", callback_data="btn_latest"),
-            InlineKeyboardButton("📈 Freight Rate Index", callback_data="btn_rates")
+            InlineKeyboardButton("🚨 ទីផ្សារចុងក្រោយ / Latest Intelligence 🇬🇧🇰🇭🇨🇳", callback_data="btn_latest"),
         ],
         [
-            InlineKeyboardButton("⚓ Ports (PAS & PPAP)", callback_data="btn_ports"),
-            InlineKeyboardButton("✈️ Air Cargo (TIA/PNH)", callback_data="btn_aircargo")
+            InlineKeyboardButton("📈 តម្លៃដឹកជញ្ជូន / Rate Index", callback_data="btn_rates"),
+            InlineKeyboardButton("⚓ កំពង់ផែ / Ports (PAS & PPAP)", callback_data="btn_ports")
         ],
         [
-            InlineKeyboardButton("🚛 Highway & Trucking", callback_data="btn_trucking"),
-            InlineKeyboardButton("🏭 Factory Supply Chain", callback_data="btn_factories")
+            InlineKeyboardButton("✈️ ផ្លូវអាកាស / Air Cargo (PNH/TIA)", callback_data="btn_aircargo"),
+            InlineKeyboardButton("🚛 ផ្លូវគោក / Trucking & Expressway", callback_data="btn_trucking")
         ],
         [
-            InlineKeyboardButton("📋 Customs & GDCE", callback_data="btn_customs"),
-            InlineKeyboardButton("🌐 Switch Language", callback_data="btn_lang")
+            InlineKeyboardButton("🏭 រោងចក្រ / Factory & SEZ Supply", callback_data="btn_factories"),
+            InlineKeyboardButton("📋 គយ & ច្បាប់ / Customs & GDCE", callback_data="btn_customs")
         ],
         [
-            InlineKeyboardButton("🔔 Toggle Auto-Digest", callback_data="btn_subscribe")
+            InlineKeyboardButton("🌐 ជ្រើសរើសភាសា / Switch Language", callback_data="btn_lang"),
+            InlineKeyboardButton("🔔 ជាវព័ត៌មាន / Daily Digest Alerts", callback_data="btn_subscribe")
         ]
     ]
     return InlineKeyboardMarkup(keyboard)
@@ -107,17 +107,20 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         language=DEFAULT_LANGUAGE
     )
 
+    name = user.first_name if user else "Logistics Professional"
     welcome_text = (
-        f"🇰🇭 <b>CAMBODIA LOGISTICS MARKET INTELLIGENCE BOT</b>\n"
-        f"<i>ព័ត៌មានភស្តុភារកម្ម ការដឹកជញ្ជូន និងទីផ្សារផ្គត់ផ្គង់កម្ពុជា</i>\n\n"
-        f"Hello <b>{user.first_name if user else 'Logistics Professional'}</b>! Welcome to your automated logistics intelligence assistant.\n\n"
-        f"<b>🎯 Designed for Cambodian Supply Chain Stakeholders:</b>\n"
-        f"• 🏭 <b>Garment & Footwear Factories:</b> Export schedules, container cut-offs & fabric imports\n"
-        f"• 📦 <b>Freight Forwarders & Brokers:</b> Feeder slot availability, carrier rates & GDCE customs\n"
-        f"• 🚢 <b>Carriers & Shipping Lines:</b> Sihanoukville (PAS) & Phnom Penh (PPAP) berth updates\n"
-        f"• ✈️ <b>Airlines & Air Freight GSAs:</b> Belly capacity, freighter flights & express rates\n"
-        f"• 🚛 <b>Trucking Companies:</b> PP-Sihanoukville Expressway tolls, Bavet & Poipet border status\n\n"
-        f"<i>Select an option below or type <code>/help</code> for quick commands:</i>"
+        f"🌟 <b>CAMBODIA LOGISTICS MARKET INTELLIGENCE</b>\n"
+        f"🇰🇭 <i>បណ្តាញព័ត៌មានភស្តុភារកម្ម និងទីផ្សារផ្គត់ផ្គង់កម្ពុជា</i>\n"
+        f"🇨🇳 <i>柬埔寨现代供应链与跨境物流智能资讯平台</i>\n"
+        f"────────────────────────────\n\n"
+        f"👋 Welcome <b>{name}</b>! You now have direct access to verified logistics intelligence for Cambodia.\n\n"
+        f"💎 <b>What You Receive Here (3x Daily):</b>\n"
+        f"• 🚢 <b>PAS & PPAP Port Feeder Schedules</b> (Turnaround, wait times & berths)\n"
+        f"• 📈 <b>Freight Rate Indices</b> (Ocean container, air cargo & diesel costs)\n"
+        f"• 🚛 <b>Expressway & Cross-Border Trucking</b> (PP-Sihanoukville & Bavet/Poipet)\n"
+        f"• 🏭 <b>Garment & Footwear (GFT) Inflow</b> (Textile stuffing, raw materials)\n"
+        f"• 📋 <b>GDCE Customs & Trade Regulations</b> (ASYCUDA, CamDX, Form D & RCEP)\n\n"
+        f"<i>👇 Tap any button below for instant real-time data:</i>"
     )
 
     await update.message.reply_html(
@@ -519,8 +522,42 @@ async def post_now_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     caption = format_intelligence_post(briefing, language_mode=DEFAULT_LANGUAGE)
     await send_briefing_response(context.bot, chat_id, briefing, caption)
 
+
+async def chat_member_update_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Greets new members who join the group with a warm welcome and quick feature buttons."""
+    if not update.chat_member:
+        return
+    new_member = update.chat_member.new_chat_member
+    old_member = update.chat_member.old_chat_member
+    chat = update.effective_chat
+    
+    # Check if a user joined (was not member before, is member now)
+    if old_member.status in (constants.ChatMemberStatus.LEFT, constants.ChatMemberStatus.BANNED) and new_member.status == constants.ChatMemberStatus.MEMBER:
+        user = new_member.user
+        if user.is_bot:
+            return
+        
+        name = user.first_name or "Logistics Colleague"
+        welcome_msg = (
+            f"👋 <b>Welcome {name} to {chat.title}! / សូមស្វាគមន៍ / 欢迎加入！</b>\n\n"
+            f"🇰🇭 <b>You are now connected to Cambodia's Verified Supply Chain Hub.</b>\n"
+            f"• 📊 Real-time PAS & PPAP port schedules\n"
+            f"• 📈 Container, air cargo & diesel rate benchmarks\n"
+            f"• 📋 GDCE customs clearance & trade agreement guides\n\n"
+            f"<i>💡 Tap below to explore live data instantly:</i>"
+        )
+        try:
+            await context.bot.send_message(
+                chat_id=chat.id,
+                text=welcome_msg,
+                reply_markup=get_main_keyboard(),
+                parse_mode=constants.ParseMode.HTML
+            )
+        except Exception as e:
+            logger.warning(f"Could not send welcome message to new group member: {e}")
+
 async def group_message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Auto-registers group whenever any message is sent in the group."""
+    """Auto-registers group and handles conversational queries."""
     chat = update.effective_chat
     if chat and chat.type in (constants.ChatType.GROUP, constants.ChatType.SUPERGROUP):
         add_subscriber(
@@ -633,6 +670,7 @@ def create_bot_app() -> Application:
 
     # Auto-link channels and groups (via ChatMember update, channel posts, or forwarded messages)
     app.add_handler(ChatMemberHandler(my_chat_member_handler, ChatMemberHandler.MY_CHAT_MEMBER))
+    app.add_handler(ChatMemberHandler(chat_member_update_handler, ChatMemberHandler.CHAT_MEMBER))
     app.add_handler(MessageHandler(filters.ChatType.CHANNEL, channel_post_handler))
     app.add_handler(MessageHandler(filters.ChatType.GROUPS, group_message_handler))
     app.add_handler(MessageHandler(filters.FORWARDED, forward_link_handler))
