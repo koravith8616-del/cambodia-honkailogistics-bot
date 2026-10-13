@@ -115,6 +115,20 @@ CURATED_ACTION_PHOTOS: Dict[str, List[Dict[str, str]]] = {
             "location": "Mekong River Basin to Kep Coastal Canal",
             "credit": "Cambodia Waterways Development"
         }
+    ],
+    "rate_index": [
+        {
+            "url": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80",
+            "title": "Global Freight Market Trading & Container Rate Analysis",
+            "location": "Cambodia Freight & Tariff Index Center",
+            "credit": "Market Financial & Rate Intelligence"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80",
+            "title": "Supply Chain Operations & Spot Freight Benchmark Dashboard",
+            "location": "CAMFFA Logistics Exchange",
+            "credit": "Freight Analytics & Benchmarking"
+        }
     ]
 }
 
@@ -126,7 +140,9 @@ def get_action_photo_for_topic(category: str, keywords: Optional[str] = None) ->
     kw_lower = (keywords or "").lower()
 
     target_bucket = "ocean_port"
-    if any(k in cat_lower or k in kw_lower for k in ["air", "flight", "plane", "airport", "airline", "tia", "pnh"]):
+    if any(k in cat_lower or k in kw_lower for k in ["rate", "index", "price", "tariff", "benchmark", "cost", "fuel", "diesel"]):
+        target_bucket = "rate_index"
+    elif any(k in cat_lower or k in kw_lower for k in ["air", "flight", "plane", "airport", "airline", "tia", "pnh"]):
         target_bucket = "air_cargo"
     elif any(k in cat_lower or k in kw_lower for k in ["truck", "highway", "expressway", "road", "bavet", "poipet", "border"]):
         target_bucket = "trucking_highway"

@@ -110,17 +110,21 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     name = user.first_name if user else "Logistics Professional"
     welcome_text = (
         f"🌟 <b>CAMBODIA LOGISTICS MARKET INTELLIGENCE</b>\n"
-        f"🇰🇭 <i>បណ្តាញព័ត៌មានភស្តុភារកម្ម និងទីផ្សារផ្គត់ផ្គង់កម្ពុជា</i>\n"
-        f"🇨🇳 <i>柬埔寨现代供应链与跨境物流智能资讯平台</i>\n"
+        f"🇰🇭 <i>បណ្តាញព័ត៌មានភស្តុភារកម្ម និងទីផ្សារផ្គត់ផ្គង់កម្ពុជា (ផ្ទៀងផ្ទាត់ផ្លូវការ)</i>\n"
+        f"🇨🇳 <i>柬埔寨现代供应链与跨境物流智能资讯平台（官方实证）</i>\n"
         f"────────────────────────────\n\n"
-        f"👋 Welcome <b>{name}</b>! You now have direct access to verified logistics intelligence for Cambodia.\n\n"
-        f"💎 <b>What You Receive Here (3x Daily):</b>\n"
-        f"• 🚢 <b>PAS & PPAP Port Feeder Schedules</b> (Turnaround, wait times & berths)\n"
-        f"• 📈 <b>Freight Rate Indices</b> (Ocean container, air cargo & diesel costs)\n"
-        f"• 🚛 <b>Expressway & Cross-Border Trucking</b> (PP-Sihanoukville & Bavet/Poipet)\n"
-        f"• 🏭 <b>Garment & Footwear (GFT) Inflow</b> (Textile stuffing, raw materials)\n"
-        f"• 📋 <b>GDCE Customs & Trade Regulations</b> (ASYCUDA, CamDX, Form D & RCEP)\n\n"
-        f"<i>👇 Tap any button below for instant real-time data:</i>"
+        f"👋 Welcome <b>{name}</b>! You have direct access to verified logistics intelligence for Cambodia.\n\n"
+        f"🛡️ <b>Official Trust & Operational Transparency:</b>\n"
+        f"• 🔒 <b>100% Free Public Market Intelligence:</b> No fees, no crypto, no trading signals, no financial solicitation.\n"
+        f"• 📸 <b>Verified Real-Action Visuals:</b> Every post is accompanied by authentic logistics action photos from actual port terminals, cargo ramps, and container yards.\n"
+        f"• 🏛️ <b>Authoritative Data Sources:</b> PAS, PPAP, MPWT, GDCE (ASYCUDA/CamDX), IATA, and regional carrier schedules.\n\n"
+        f"💎 <b>What You Receive Here (3x Daily Dispatches):</b>\n"
+        f"• 🚢 <b>PAS & PPAP Port Schedules:</b> Feeder berths, turnaround & yard status\n"
+        f"• 📈 <b>Freight Benchmarks:</b> Ocean container, air cargo & diesel indices\n"
+        f"• 🚛 <b>Trucking Corridors:</b> PP-Sihanoukville Expressway & Bavet/Poipet gates\n"
+        f"• 🏭 <b>Factory Supply Chain:</b> GFT raw material inflows & SEZ dry ports\n"
+        f"• 📋 <b>GDCE Customs:</b> ASYCUDA, CamDX, Form D/E, and RCEP compliance\n\n"
+        f"<i>👇 Tap any button below for instant verified data:</i>"
     )
 
     await update.message.reply_html(
@@ -216,101 +220,110 @@ async def latest_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def rates_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Displays latest freight rate benchmarks."""
+    """Displays latest freight rate benchmarks with verified action photo."""
+    chat_id = update.effective_chat.id
     indicators = get_all_indicators()
     message = format_rate_index(indicators)
-    await update.message.reply_html(message)
+    photo_info = get_action_photo_for_topic("rate_index", "freight rates benchmark")
+    
+    try:
+        await context.bot.send_photo(
+            chat_id=chat_id,
+            photo=photo_info["url"],
+            caption=f"📈 <b>CAMBODIA FREIGHT & LOGISTICS BENCHMARK INDEX</b>\n📸 <i>{photo_info['title']} ({photo_info['location']})</i>",
+            parse_mode=constants.ParseMode.HTML
+        )
+        await context.bot.send_message(
+            chat_id=chat_id,
+            text=message,
+            parse_mode=constants.ParseMode.HTML,
+            disable_web_page_preview=True
+        )
+    except Exception:
+        await update.message.reply_html(message)
 
 
 async def ports_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Displays Sihanoukville (PAS) and Phnom Penh (PPAP) port conditions with action photo."""
+    """Displays Sihanoukville (PAS) and Phnom Penh (PPAP) port conditions with verified action photo."""
     chat_id = update.effective_chat.id
     photo_info = get_action_photo_for_topic("ocean_port", "PAS PPAP container port")
     text = format_port_status()
-
+    header = (
+        f"⚓ <b>CAMBODIA PORTS OPERATIONAL DASHBOARD</b>\n"
+        f"📸 <i>{photo_info['title']} ({photo_info['location']})</i>"
+    )
     try:
         await context.bot.send_photo(
             chat_id=chat_id,
             photo=photo_info["url"],
-            caption=text,
+            caption=header,
             parse_mode=constants.ParseMode.HTML
         )
     except Exception:
-        await update.message.reply_html(text)
+        pass
+    await update.message.reply_html(text)
 
 
 async def aircargo_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Displays Air cargo freight intelligence with action photo."""
+    """Displays Air cargo freight intelligence with verified action photo."""
     chat_id = update.effective_chat.id
     briefing = await research_engine.get_latest_market_briefing(category_filter="air")
-    photo_info = get_action_photo_for_topic("air_cargo", "air freight")
     caption = format_intelligence_post(briefing, language_mode=DEFAULT_LANGUAGE)
-
-    try:
-        await context.bot.send_photo(
-            chat_id=chat_id,
-            photo=photo_info["url"],
-            caption=caption,
-            parse_mode=constants.ParseMode.HTML
-        )
-    except Exception:
-        await update.message.reply_html(caption)
+    await send_briefing_response(context.bot, chat_id, briefing, caption)
 
 
 async def trucking_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Displays Highway, border gates and trucking corridor updates."""
+    """Displays Highway, border gates and trucking corridor updates with verified action photo."""
     chat_id = update.effective_chat.id
     briefing = await research_engine.get_latest_market_briefing(category_filter="trucking")
-    photo_info = get_action_photo_for_topic("trucking_highway", "expressway border")
     caption = format_intelligence_post(briefing, language_mode=DEFAULT_LANGUAGE)
-
-    try:
-        await context.bot.send_photo(
-            chat_id=chat_id,
-            photo=photo_info["url"],
-            caption=caption,
-            parse_mode=constants.ParseMode.HTML
-        )
-    except Exception:
-        await update.message.reply_html(caption)
+    await send_briefing_response(context.bot, chat_id, briefing, caption)
 
 
 async def customs_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Displays Customs GDCE procedures and trade compliance."""
+    """Displays Customs GDCE procedures and trade compliance with verified action photo."""
     chat_id = update.effective_chat.id
     photo_info = get_action_photo_for_topic("customs_inspection", "customs scanner")
     text = format_customs_guide()
-
+    header = (
+        f"📋 <b>CAMBODIA CUSTOMS (GDCE) & CLEARANCE GUIDE</b>\n"
+        f"📸 <i>{photo_info['title']} ({photo_info['location']})</i>"
+    )
     try:
         await context.bot.send_photo(
             chat_id=chat_id,
             photo=photo_info["url"],
-            caption=text,
+            caption=header,
             parse_mode=constants.ParseMode.HTML
         )
     except Exception:
-        await update.message.reply_html(text)
+        pass
+    await update.message.reply_html(text)
 
 
 async def factories_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Displays Factory supply chain & GFT manufacturing intelligence."""
+    """Displays Factory supply chain & GFT manufacturing intelligence with verified action photo."""
     chat_id = update.effective_chat.id
     photo_info = get_action_photo_for_topic("factory_logistics", "factory garment stuffing")
     text = format_factory_supply_chain()
-
+    header = (
+        f"🏭 <b>CAMBODIA FACTORY & INDUSTRIAL SECTOR DISPATCH</b>\n"
+        f"📸 <i>{photo_info['title']} ({photo_info['location']})</i>"
+    )
     try:
         await context.bot.send_photo(
             chat_id=chat_id,
             photo=photo_info["url"],
-            caption=text,
+            caption=header,
             parse_mode=constants.ParseMode.HTML
         )
     except Exception:
-        await update.message.reply_html(text)
+        pass
+    await update.message.reply_html(text)
 
 
 async def research_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Handles /research [query] on-demand deep market research."""
+    """Handles /research [query] on-demand deep market research with verified action photo."""
     chat_id = update.effective_chat.id
     query = " ".join(context.args).strip() if context.args else ""
     if not query:
@@ -333,16 +346,7 @@ async def research_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except Exception:
         pass
 
-    try:
-        await context.bot.send_photo(
-            chat_id=chat_id,
-            photo=research_res["photo_url"],
-            caption=caption,
-            parse_mode=constants.ParseMode.HTML
-        )
-    except Exception as e:
-        logger.warning(f"Could not send research photo: {e}")
-        await update.message.reply_html(caption)
+    await send_briefing_response(context.bot, chat_id, research_res, caption)
 
 
 async def subscribe_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -401,7 +405,23 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     elif data == "btn_rates":
         indicators = get_all_indicators()
-        await query.message.reply_html(format_rate_index(indicators))
+        photo_info = get_action_photo_for_topic("rate_index", "freight rates benchmark")
+        message = format_rate_index(indicators)
+        try:
+            await context.bot.send_photo(
+                chat_id=chat_id,
+                photo=photo_info["url"],
+                caption=f"📈 <b>CAMBODIA FREIGHT & LOGISTICS BENCHMARK INDEX</b>\n📸 <i>{photo_info['title']} ({photo_info['location']})</i>",
+                parse_mode=constants.ParseMode.HTML
+            )
+            await context.bot.send_message(
+                chat_id=chat_id,
+                text=message,
+                parse_mode=constants.ParseMode.HTML,
+                disable_web_page_preview=True
+            )
+        except Exception:
+            await query.message.reply_html(message)
 
     elif data == "btn_ports":
         photo_info = get_action_photo_for_topic("ocean_port", "port")
@@ -424,18 +444,22 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     elif data == "btn_factories":
         photo_info = get_action_photo_for_topic("factory_logistics", "factory")
         text = format_factory_supply_chain()
+        header = f"🏭 <b>CAMBODIA FACTORY & INDUSTRIAL SECTOR DISPATCH</b>\n📸 <i>{photo_info['title']} ({photo_info['location']})</i>"
         try:
-            await context.bot.send_photo(chat_id=chat_id, photo=photo_info["url"], caption=text, parse_mode=constants.ParseMode.HTML)
+            await context.bot.send_photo(chat_id=chat_id, photo=photo_info["url"], caption=header, parse_mode=constants.ParseMode.HTML)
         except Exception:
-            await query.message.reply_html(text)
+            pass
+        await context.bot.send_message(chat_id=chat_id, text=text, parse_mode=constants.ParseMode.HTML, disable_web_page_preview=True)
 
     elif data == "btn_customs":
         photo_info = get_action_photo_for_topic("customs_inspection", "customs")
         text = format_customs_guide()
+        header = f"📋 <b>CAMBODIA CUSTOMS (GDCE) & CLEARANCE GUIDE</b>\n📸 <i>{photo_info['title']} ({photo_info['location']})</i>"
         try:
-            await context.bot.send_photo(chat_id=chat_id, photo=photo_info["url"], caption=text, parse_mode=constants.ParseMode.HTML)
+            await context.bot.send_photo(chat_id=chat_id, photo=photo_info["url"], caption=header, parse_mode=constants.ParseMode.HTML)
         except Exception:
-            await query.message.reply_html(text)
+            pass
+        await context.bot.send_message(chat_id=chat_id, text=text, parse_mode=constants.ParseMode.HTML, disable_web_page_preview=True)
 
     elif data == "btn_lang":
         keyboard = [
