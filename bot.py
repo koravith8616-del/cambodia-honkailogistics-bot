@@ -23,6 +23,7 @@ from telegram.ext import (
     CallbackQueryHandler,
     ContextTypes,
     MessageHandler,
+    ChatMemberHandler,
     filters
 )
 
@@ -462,6 +463,55 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 # ==============================================================================
+# ==============================================================================
+# CHANNEL & GROUP AUTO-DISCOVERY HANDLERS
+# ==============================================================================
+
+async def my_chat_member_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Automatically registers the channel or group when the bot is added/promoted as admin."""
+    chat = update.effective_chat
+    if not update.my_chat_member:
+        return
+    new_member = update.my_chat_member.new_chat_member
+    if new_member.status in (constants.ChatMemberStatus.ADMINISTRATOR, constants.ChatMemberStatus.MEMBER):
+        logger.info(f"Bot joined {chat.type} '{chat.title}' (ID: {chat.id})! Auto-registering for dispatches...")
+        add_subscriber(
+            chat_id=chat.id,
+            username=chat.username,
+            first_name=chat.title,
+            is_channel=True,
+            language=DEFAULT_LANGUAGE
+        )
+        try:
+            welcome_dispatch = (
+                f"🇰🇭 <b>HONKAI CAMBODIA LOGISTICS DISPATCH LINKED</b>\n"
+                f"✅ This {chat.type} is now connected! It will receive <b>3x Daily Automated Logistics Briefings</b> with real action photos (08:00 Sea, 13:30 Trucking, 18:00 Air/Customs ICT) in Khmer, English & Chinese."
+            )
+            await context.bot.send_message(chat_id=chat.id, text=welcome_dispatch, parse_mode=constants.ParseMode.HTML)
+        except Exception as e:
+            logger.warning(f"Could not send welcome post to {chat.id}: {e}")
+
+async def channel_post_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Auto-detects channel ID whenever any message appears in the channel."""
+    chat = update.effective_chat
+    if chat and chat.type == constants.ChatType.CHANNEL:
+        add_subscriber(
+            chat_id=chat.id,
+            username=chat.username,
+            first_name=chat.title,
+            is_channel=True,
+            language=DEFAULT_LANGUAGE
+        )
+
+async def post_now_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Instantly triggers an automated market intelligence dispatch with real action photo."""
+    chat_id = update.effective_chat.id
+    briefing = await research_engine.get_latest_market_briefing()
+    caption = format_intelligence_post(briefing, language_mode=DEFAULT_LANGUAGE)
+    await send_briefing_response(context.bot, chat_id, briefing, caption)
+
+
+# ==============================================================================
 # BOT FACTORY / INITIALIZATION
 # ==============================================================================
 
@@ -488,6 +538,11 @@ def create_bot_app() -> Application:
     app.add_handler(CommandHandler("subscribe", subscribe_command))
     app.add_handler(CommandHandler("unsubscribe", unsubscribe_command))
     app.add_handler(CommandHandler("lang", lang_command))
+    app.add_handler(CommandHandler("post_now", post_now_command))
+
+    # Auto-link channels and groups
+    app.add_handler(ChatMemberHandler(my_chat_member_handler, ChatMemberHandler.MY_CHAT_MEMBER))
+    app.add_handler(MessageHandler(filters.ChatType.CHANNEL, channel_post_handler))
 
     # Register inline callbacks
     app.add_handler(CallbackQueryHandler(callback_handler))
