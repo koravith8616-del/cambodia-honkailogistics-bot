@@ -510,6 +510,75 @@ async def post_now_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     caption = format_intelligence_post(briefing, language_mode=DEFAULT_LANGUAGE)
     await send_briefing_response(context.bot, chat_id, briefing, caption)
 
+async def forward_link_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Detects forwarded messages from channels or groups and links them automatically."""
+    msg = update.effective_message
+    if not msg:
+        return
+    
+    target_chat = None
+    if getattr(msg, "forward_from_chat", None):
+        target_chat = msg.forward_from_chat
+    elif getattr(msg, "forward_origin", None) and hasattr(msg.forward_origin, "chat"):
+        target_chat = msg.forward_origin.chat
+        
+    if target_chat:
+        chat_id = target_chat.id
+        title = target_chat.title or "Linked Channel/Group"
+        username = target_chat.username
+        logger.info(f"Forwarded from {target_chat.type} '{title}' (ID: {chat_id})! Linking...")
+        add_subscriber(
+            chat_id=chat_id,
+            username=username,
+            first_name=title,
+            is_channel=True,
+            language=DEFAULT_LANGUAGE
+        )
+        await msg.reply_html(
+            f"🎉 <b>SUCCESS! Connected:</b> <i>{title}</i> (ID: <code>{chat_id}</code>)\n\n"
+            f"🚀 <b>Now posting the live market dispatch with real action photo directly into {title}...</b>"
+        )
+        briefing = await research_engine.get_latest_market_briefing()
+        caption = format_intelligence_post(briefing, language_mode=DEFAULT_LANGUAGE)
+        try:
+            await send_briefing_response(context.bot, chat_id, briefing, caption)
+            await msg.reply_html(f"✅ <b>Successfully posted live dispatch to {title}!</b> Check your channel/group now!")
+        except Exception as e:
+            await msg.reply_html(
+                f"⚠️ Could not post to {title}: <code>{e}</code>\n"
+                f"<i>Please ensure @Honkai_Cambodia_Logistics_bot is an Administrator in {title} with 'Post Messages' enabled!</i>"
+            )
+
+async def link_channel_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Manual link command: /link @channel_name or /link -100xxxx"""
+    msg = update.effective_message
+    args = context.args
+    if not args:
+        await msg.reply_html(
+            "ℹ️ <b>How to link your Channel or Group:</b>\n\n"
+            "<b>Method 1 (Easiest):</b> Just <b>Forward any message</b> from your channel/group into this chat!\n"
+            "<b>Method 2:</b> Type <code>/link @YourChannelUsername</code>"
+        )
+        return
+    
+    target = args[0].strip()
+    try:
+        chat = await context.bot.get_chat(target)
+        add_subscriber(
+            chat_id=chat.id,
+            username=chat.username,
+            first_name=chat.title,
+            is_channel=True,
+            language=DEFAULT_LANGUAGE
+        )
+        await msg.reply_html(f"✅ <b>Connected:</b> <i>{chat.title}</i> (ID: <code>{chat.id}</code>)\nPublishing test dispatch...")
+        briefing = await research_engine.get_latest_market_briefing()
+        caption = format_intelligence_post(briefing, language_mode=DEFAULT_LANGUAGE)
+        await send_briefing_response(context.bot, chat.id, briefing, caption)
+        await msg.reply_html(f"🎉 <b>Successfully posted into {chat.title}!</b>")
+    except Exception as e:
+        await msg.reply_html(f"⚠️ Error connecting {target}: <code>{e}</code>\nEnsure the bot is added as Administrator first!")
+
 
 # ==============================================================================
 # BOT FACTORY / INITIALIZATION
@@ -539,10 +608,12 @@ def create_bot_app() -> Application:
     app.add_handler(CommandHandler("unsubscribe", unsubscribe_command))
     app.add_handler(CommandHandler("lang", lang_command))
     app.add_handler(CommandHandler("post_now", post_now_command))
+    app.add_handler(CommandHandler("link", link_channel_command))
 
-    # Auto-link channels and groups
+    # Auto-link channels and groups (via ChatMember update, channel posts, or forwarded messages)
     app.add_handler(ChatMemberHandler(my_chat_member_handler, ChatMemberHandler.MY_CHAT_MEMBER))
     app.add_handler(MessageHandler(filters.ChatType.CHANNEL, channel_post_handler))
+    app.add_handler(MessageHandler(filters.FORWARDED, forward_link_handler))
 
     # Register inline callbacks
     app.add_handler(CallbackQueryHandler(callback_handler))
