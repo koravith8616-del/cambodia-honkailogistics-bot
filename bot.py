@@ -148,6 +148,45 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_html(help_text)
 
 
+async def send_briefing_response(bot, chat_id: int, briefing: dict, caption: str):
+    """Safely sends briefing with photo handling Telegram's 1024-character caption limit."""
+    photo_url = briefing.get("photo_url", "")
+    if len(caption) <= 1024:
+        try:
+            await bot.send_photo(
+                chat_id=chat_id,
+                photo=photo_url,
+                caption=caption,
+                parse_mode=constants.ParseMode.HTML
+            )
+            return
+        except Exception as e:
+            logger.warning(f"send_photo failed ({e}), falling back to split delivery.")
+
+    # When caption exceeds 1024 chars (common for Trilingual posts)
+    short_header = (
+        f"🇰🇭 <b>HONKAI CAMBODIA LOGISTICS DISPATCH</b>\n"
+        f"📌 <b>{briefing.get('category', 'Market Update')}</b>\n"
+        f"📸 <i>{briefing.get('photo_title', '')} ({briefing.get('photo_location', '')})</i>"
+    )
+    try:
+        await bot.send_photo(
+            chat_id=chat_id,
+            photo=photo_url,
+            caption=short_header,
+            parse_mode=constants.ParseMode.HTML
+        )
+    except Exception:
+        pass
+
+    await bot.send_message(
+        chat_id=chat_id,
+        text=caption,
+        parse_mode=constants.ParseMode.HTML,
+        disable_web_page_preview=True
+    )
+
+
 async def latest_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Sends the latest logistics intelligence update with a real action photo."""
     chat_id = update.effective_chat.id
@@ -169,16 +208,7 @@ async def latest_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         language=DEFAULT_LANGUAGE
     )
 
-    try:
-        await context.bot.send_photo(
-            chat_id=chat_id,
-            photo=briefing["photo_url"],
-            caption=caption,
-            parse_mode=constants.ParseMode.HTML
-        )
-    except Exception as e:
-        logger.warning(f"Failed to send with photo ({e}), falling back to text message.")
-        await update.message.reply_html(caption, disable_web_page_preview=False)
+    await send_briefing_response(context.bot, chat_id, briefing, caption)
 
 
 async def rates_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -363,15 +393,7 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if data == "btn_latest":
         briefing = await research_engine.get_latest_market_briefing()
         caption = format_intelligence_post(briefing, language_mode=DEFAULT_LANGUAGE)
-        try:
-            await context.bot.send_photo(
-                chat_id=chat_id,
-                photo=briefing["photo_url"],
-                caption=caption,
-                parse_mode=constants.ParseMode.HTML
-            )
-        except Exception:
-            await query.message.reply_html(caption)
+        await send_briefing_response(context.bot, chat_id, briefing, caption)
 
     elif data == "btn_rates":
         indicators = get_all_indicators()
@@ -386,22 +408,14 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await query.message.reply_html(text)
 
     elif data == "btn_aircargo":
-        photo_info = get_action_photo_for_topic("air_cargo", "air cargo")
         briefing = await research_engine.get_latest_market_briefing(category_filter="air")
         caption = format_intelligence_post(briefing, language_mode=DEFAULT_LANGUAGE)
-        try:
-            await context.bot.send_photo(chat_id=chat_id, photo=photo_info["url"], caption=caption, parse_mode=constants.ParseMode.HTML)
-        except Exception:
-            await query.message.reply_html(caption)
+        await send_briefing_response(context.bot, chat_id, briefing, caption)
 
     elif data == "btn_trucking":
-        photo_info = get_action_photo_for_topic("trucking_highway", "trucking")
         briefing = await research_engine.get_latest_market_briefing(category_filter="trucking")
         caption = format_intelligence_post(briefing, language_mode=DEFAULT_LANGUAGE)
-        try:
-            await context.bot.send_photo(chat_id=chat_id, photo=photo_info["url"], caption=caption, parse_mode=constants.ParseMode.HTML)
-        except Exception:
-            await query.message.reply_html(caption)
+        await send_briefing_response(context.bot, chat_id, briefing, caption)
 
     elif data == "btn_factories":
         photo_info = get_action_photo_for_topic("factory_logistics", "factory")
@@ -420,7 +434,22 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await query.message.reply_html(text)
 
     elif data == "btn_lang":
-        await lang_command(update, context)
+        keyboard = [
+            [
+                InlineKeyboardButton("🌐 🇰🇭+🇬🇧+🇨🇳 Trilingual (Khmer, English & Chinese)", callback_data="lang_trilingual"),
+            ],
+            [
+                InlineKeyboardButton("🇬🇧 English Only", callback_data="lang_en"),
+                InlineKeyboardButton("🇰🇭 ភាសាខ្មែរ (Khmer)", callback_data="lang_km")
+            ],
+            [
+                InlineKeyboardButton("🇨🇳 简体中文 (Chinese Only)", callback_data="lang_zh")
+            ]
+        ]
+        await query.message.reply_html(
+            "🌐 <b>Select Preferred Content Language / ជ្រើសរើសភាសា / 语言偏好设置：</b>",
+            reply_markup=InlineKeyboardMarkup(keyboard)
+        )
 
     elif data == "btn_subscribe":
         add_subscriber(chat_id, None, None)

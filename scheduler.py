@@ -75,14 +75,41 @@ async def broadcast_market_update(bot: Bot, research_engine: LogisticsResearchEn
 
     for dest in target_recipients:
         try:
-            await bot.send_photo(
-                chat_id=dest,
-                photo=photo_url,
-                caption=caption,
-                parse_mode=constants.ParseMode.HTML
-            )
+            if len(caption) <= 1024:
+                await bot.send_photo(
+                    chat_id=dest,
+                    photo=photo_url,
+                    caption=caption,
+                    parse_mode=constants.ParseMode.HTML
+                )
+            else:
+                short_header = (
+                    f"🇰🇭 <b>HONKAI CAMBODIA LOGISTICS DISPATCH</b>\n"
+                    f"📌 <b>{briefing.get('category', 'Market Update')}</b>\n"
+                    f"📸 <i>{briefing.get('photo_title', '')} ({briefing.get('photo_location', '')})</i>"
+                )
+                await bot.send_photo(
+                    chat_id=dest,
+                    photo=photo_url,
+                    caption=short_header,
+                    parse_mode=constants.ParseMode.HTML
+                )
+                await bot.send_message(
+                    chat_id=dest,
+                    text=caption,
+                    parse_mode=constants.ParseMode.HTML,
+                    disable_web_page_preview=True
+                )
             success_count += 1
-            await asyncio.sleep(0.5)  # Politeness interval to avoid Telegram rate limits
+            await asyncio.sleep(0.5)
+        except Exception as e:
+            logger.error(f"Failed to broadcast to {dest}: {e}")
+            # Fallback to pure text message
+            try:
+                await bot.send_message(chat_id=dest, text=caption, parse_mode=constants.ParseMode.HTML)
+                success_count += 1
+            except Exception as e2:
+                logger.error(f"Fallback text also failed for {dest}: {e2}")
         except Exception as e:
             logger.error(f"Failed to broadcast to {dest}: {e}")
 
