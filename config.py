@@ -24,9 +24,9 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
 # Slot 1 (08:00 AM ICT): Ocean & Port Operations (Sihanoukville PAS / PPAP)
 # Slot 2 (13:30 PM ICT): Cross-Border Trucking, Expressway & Borders (Bavet / Poipet)
 # Slot 3 (18:00 PM ICT): Air Cargo, Factory GFT Logistics & GDCE Customs Compliance
-SCHEDULE_SLOT_1 = os.getenv("SCHEDULE_SLOT_1", "14:30").strip()
-SCHEDULE_SLOT_2 = os.getenv("SCHEDULE_SLOT_2", "17:00").strip()
-SCHEDULE_SLOT_3 = os.getenv("SCHEDULE_SLOT_3", "19:00").strip()
+SCHEDULE_SLOT_1 = os.getenv("SCHEDULE_SLOT_1", "08:00").strip()
+SCHEDULE_SLOT_2 = os.getenv("SCHEDULE_SLOT_2", "13:30").strip()
+SCHEDULE_SLOT_3 = os.getenv("SCHEDULE_SLOT_3", "18:00").strip()
 
 # Default language: "trilingual" (Khmer + English + Chinese), "en", "km", or "zh"
 DEFAULT_LANGUAGE = os.getenv("DEFAULT_LANGUAGE", "trilingual").lower()
