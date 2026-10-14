@@ -10,7 +10,7 @@ load_dotenv(BASE_DIR / ".env")
 
 # Telegram Bot Config
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
-TELEGRAM_CHANNEL_ID = os.getenv("TELEGRAM_CHANNEL_ID", "").strip()
+TELEGRAM_CHANNEL_ID = os.getenv("TELEGRAM_CHANNEL_ID", "-1004390871391").strip()
 
 # Admin IDs (comma-separated integers)
 _raw_admins = os.getenv("ADMIN_USER_IDS", "").strip()
