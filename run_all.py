@@ -27,26 +27,36 @@ logging.basicConfig(
 )
 logger = logging.getLogger("RUN_ALL")
 
+from datetime import timezone, timedelta
+ICT_TIMEZONE = timezone(timedelta(hours=7))
+
 async def run_scheduler_task(bot, research_engine):
-    """Background scheduler task checking for the 3 daily dispatch slots."""
+    """Background scheduler task checking for the 3 daily dispatch slots in Cambodia Time (ICT)."""
     logger.info("Background 3x/Day Scheduler task started inside unified runner.")
     last_broadcast_date = ""
+    last_log_min = ""
 
     while True:
         try:
-            now_str = datetime.now().strftime("%H:%M")
-            today_str = datetime.now().strftime("%Y-%m-%d")
+            now_ict = datetime.now(ICT_TIMEZONE)
+            now_str = now_ict.strftime("%H:%M")
+            today_str = now_ict.strftime("%Y-%m-%d")
+
+            # Periodic heartbeat log every 30 minutes
+            if now_ict.minute % 30 == 0 and last_log_min != now_str:
+                logger.info(f"[HEARTBEAT] Current Cambodia Time: {now_str} ICT. Scheduled slots: {list(DAILY_SLOTS_CONFIG.keys())}")
+                last_log_min = now_str
 
             if now_str in DAILY_SLOTS_CONFIG and last_broadcast_date != f"{today_str}_{now_str}":
                 slot_info = DAILY_SLOTS_CONFIG[now_str]
-                logger.info(f"Triggering {slot_info['label']} at {now_str} ICT!")
+                logger.info(f"Triggering {slot_info['label']} at {now_str} ICT (Cambodia Time)!")
                 await broadcast_market_update(bot, research_engine, category_filter=slot_info["filter"])
                 last_broadcast_date = f"{today_str}_{now_str}"
 
-            await asyncio.sleep(30)
+            await asyncio.sleep(20)
         except Exception as e:
             logger.error(f"Error in background scheduler: {e}")
-            await asyncio.sleep(60)
+            await asyncio.sleep(30)
 
 import os
 from aiohttp import web

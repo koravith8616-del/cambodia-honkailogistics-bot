@@ -143,11 +143,14 @@ async def run_scheduler_loop():
     logger.info(f"• Slot 3 ({SCHEDULE_SLOT_3} ICT): Air Cargo & Customs/Factory Logistics")
 
     last_broadcast_date = ""
+    from datetime import timezone, timedelta
+    ict_tz = timezone(timedelta(hours=7))
 
     while True:
         try:
-            now_str = datetime.now().strftime("%H:%M")
-            today_str = datetime.now().strftime("%Y-%m-%d")
+            now_ict = datetime.now(ict_tz)
+            now_str = now_ict.strftime("%H:%M")
+            today_str = now_ict.strftime("%Y-%m-%d")
 
             # Check if current time matches any of the 3 daily slots
             if now_str in DAILY_SLOTS_CONFIG and last_broadcast_date != f"{today_str}_{now_str}":
@@ -156,11 +159,11 @@ async def run_scheduler_loop():
                 await broadcast_market_update(bot, research_engine, category_filter=slot_info["filter"])
                 last_broadcast_date = f"{today_str}_{now_str}"
 
-            # Sleep 30 seconds between checks
-            await asyncio.sleep(30)
+            # Sleep 20 seconds between checks
+            await asyncio.sleep(20)
         except Exception as e:
             logger.error(f"Error in scheduler loop: {e}")
-            await asyncio.sleep(60)
+            await asyncio.sleep(30)
 
 if __name__ == "__main__":
     asyncio.run(run_scheduler_loop())
