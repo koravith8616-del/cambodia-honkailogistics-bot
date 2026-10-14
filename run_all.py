@@ -48,6 +48,25 @@ async def run_scheduler_task(bot, research_engine):
             logger.error(f"Error in background scheduler: {e}")
             await asyncio.sleep(60)
 
+import os
+from aiohttp import web
+
+async def health_check(request):
+    """Health check endpoint for Render Web Service."""
+    return web.Response(text="Cambodia Logistics Bot is running 24/7!", status=200)
+
+async def start_health_server():
+    """Starts minimal HTTP server on PORT required by Render Web Service."""
+    port = int(os.getenv("PORT", "10000"))
+    app = web.Application()
+    app.router.add_get("/", health_check)
+    app.router.add_get("/healthz", health_check)
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, "0.0.0.0", port)
+    await site.start()
+    logger.info(f"Health check HTTP server listening on port {port} for Render.")
+
 async def main():
     init_db()
 
@@ -58,6 +77,9 @@ async def main():
     logger.info("Initializing Cambodia Logistics Telegram Bot & 24/7 Engine...")
     app = create_bot_app()
     research_engine = LogisticsResearchEngine()
+
+    # Start HTTP health server for Render
+    await start_health_server()
 
     async with app:
         await app.start()
