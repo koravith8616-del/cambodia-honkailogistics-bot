@@ -77,6 +77,21 @@ async def start_health_server():
     await site.start()
     logger.info(f"Health check HTTP server listening on port {port} for Render.")
 
+async def keep_awake_ping():
+    """Periodically pings self endpoint every 10 minutes to prevent Render free instance from sleeping."""
+    await asyncio.sleep(60)  # Wait for initial boot
+    import httpx
+    ping_url = os.getenv("RENDER_EXTERNAL_URL", "https://cambodia-honkailogistics-bot.onrender.com/")
+    logger.info(f"Self-ping keep-awake loop started for: {ping_url}")
+    while True:
+        try:
+            await asyncio.sleep(600)  # Ping every 10 minutes (Render sleeps after 15 min inactivity)
+            async with httpx.AsyncClient(timeout=15.0) as client:
+                res = await client.get(ping_url)
+                logger.info(f"[SELF-PING] Render keep-awake ping sent. Status: {res.status_code}")
+        except Exception as e:
+            logger.warning(f"[SELF-PING] Error during keep-awake ping: {e}")
+
 async def main():
     init_db()
 
@@ -90,6 +105,9 @@ async def main():
 
     # Start HTTP health server for Render
     await start_health_server()
+
+    # Start self-ping keep-awake loop
+    asyncio.create_task(keep_awake_ping())
 
     async with app:
         await app.start()
