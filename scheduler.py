@@ -40,9 +40,9 @@ logger = logging.getLogger(__name__)
 # 2. Midday (13:30 ICT): Cross-Border Trucking, Expressway Haulage & Borders (Bavet / Poipet)
 # 3. Evening (18:00 ICT): Air Cargo Express, Customs (GDCE), SEZ & Factory Logistics
 DAILY_SLOTS_CONFIG = {
-    SCHEDULE_SLOT_1: {"filter": "ocean", "label": "Morning Ocean & Port Dispatch"},
-    SCHEDULE_SLOT_2: {"filter": "trucking", "label": "Midday Trucking & Expressway Dispatch"},
-    SCHEDULE_SLOT_3: {"filter": "air", "label": "Evening Air Cargo & Customs Dispatch"}
+    SCHEDULE_SLOT_1: {"filter": "slot_morning", "label": "Morning Ocean & Ports Dispatch (08:00 ICT)"},
+    SCHEDULE_SLOT_2: {"filter": "slot_midday", "label": "Midday Trucking & Expressway Dispatch (13:30 ICT)"},
+    SCHEDULE_SLOT_3: {"filter": "slot_evening", "label": "Evening Air, Customs & SEZ Dispatch (18:00 ICT)"}
 }
 
 ICT_TIMEZONE = timezone(timedelta(hours=7))
