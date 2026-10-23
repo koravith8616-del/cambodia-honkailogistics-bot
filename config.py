@@ -28,8 +28,8 @@ SCHEDULE_SLOT_1 = os.getenv("SCHEDULE_SLOT_1", "08:00").strip()
 SCHEDULE_SLOT_2 = os.getenv("SCHEDULE_SLOT_2", "13:30").strip()
 SCHEDULE_SLOT_3 = os.getenv("SCHEDULE_SLOT_3", "18:00").strip()
 
-# Default language: "trilingual" (Khmer + English + Chinese), "en", "km", or "zh"
-DEFAULT_LANGUAGE = os.getenv("DEFAULT_LANGUAGE", "trilingual").lower()
+# Default language: "en" (English only for client-facing logistics posts & service promotion)
+DEFAULT_LANGUAGE = os.getenv("DEFAULT_LANGUAGE", "en").lower()
 
 
 # Database Path

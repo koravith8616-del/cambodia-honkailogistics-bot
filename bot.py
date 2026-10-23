@@ -63,26 +63,26 @@ research_engine = LogisticsResearchEngine()
 
 
 def get_main_keyboard() -> InlineKeyboardMarkup:
-    """Builds interactive inline keyboard with executive icons and multilingual labels."""
+    """Builds interactive inline keyboard with executive icons and English labels."""
     keyboard = [
         [
-            InlineKeyboardButton("🚨 ទីផ្សារចុងក្រោយ / Latest Intelligence 🇬🇧🇰🇭🇨🇳", callback_data="btn_latest"),
+            InlineKeyboardButton("🚨 Latest Intelligence & Service Briefing", callback_data="btn_latest"),
         ],
         [
-            InlineKeyboardButton("📈 តម្លៃដឹកជញ្ជូន / Rate Index", callback_data="btn_rates"),
-            InlineKeyboardButton("⚓ កំពង់ផែ / Ports (PAS & PPAP)", callback_data="btn_ports")
+            InlineKeyboardButton("📈 Freight Rate Benchmarks", callback_data="btn_rates"),
+            InlineKeyboardButton("⚓ Sea Ports (PAS & PPAP)", callback_data="btn_ports")
         ],
         [
-            InlineKeyboardButton("✈️ ផ្លូវអាកាស / Air Cargo (PNH/TIA)", callback_data="btn_aircargo"),
-            InlineKeyboardButton("🚛 ផ្លូវគោក / Trucking & Expressway", callback_data="btn_trucking")
+            InlineKeyboardButton("✈️ Air Cargo Express (PNH/TIA)", callback_data="btn_aircargo"),
+            InlineKeyboardButton("🚛 Cross-Border Trucking & Highway", callback_data="btn_trucking")
         ],
         [
-            InlineKeyboardButton("🏭 រោងចក្រ / Factory & SEZ Supply", callback_data="btn_factories"),
-            InlineKeyboardButton("📋 គយ & ច្បាប់ / Customs & GDCE", callback_data="btn_customs")
+            InlineKeyboardButton("🏭 Factory & SEZ Supply Chain", callback_data="btn_factories"),
+            InlineKeyboardButton("📋 GDCE Customs & Trade Advisory", callback_data="btn_customs")
         ],
         [
-            InlineKeyboardButton("🌐 ជ្រើសរើសភាសា / Switch Language", callback_data="btn_lang"),
-            InlineKeyboardButton("🔔 ជាវព័ត៌មាន / Daily Digest Alerts", callback_data="btn_subscribe")
+            InlineKeyboardButton("🔔 Daily Intelligence Alerts (3x/Day)", callback_data="btn_subscribe"),
+            InlineKeyboardButton("📞 Contact Honkai Logistics Desk", callback_data="btn_contact")
         ]
     ]
     return InlineKeyboardMarkup(keyboard)
@@ -107,24 +107,21 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         language=DEFAULT_LANGUAGE
     )
 
-    name = user.first_name if user else "Logistics Professional"
+    name = user.first_name if user else "Valued Client"
     welcome_text = (
-        f"🌟 <b>CAMBODIA LOGISTICS MARKET INTELLIGENCE</b>\n"
-        f"🇰🇭 <i>បណ្តាញព័ត៌មានភស្តុភារកម្ម និងទីផ្សារផ្គត់ផ្គង់កម្ពុជា (ផ្ទៀងផ្ទាត់ផ្លូវការ)</i>\n"
-        f"🇨🇳 <i>柬埔寨现代供应链与跨境物流智能资讯平台（官方实证）</i>\n"
+        f"🌟 <b>HONKAI LOGISTICS | CAMBODIA MARKET INTELLIGENCE</b>\n"
+        f"⚡ <i>Official Supply Chain Intelligence & Freight Operations Platform</i>\n"
         f"────────────────────────────\n\n"
-        f"👋 Welcome <b>{name}</b>! You have direct access to verified logistics intelligence for Cambodia.\n\n"
-        f"🛡️ <b>Official Trust & Operational Transparency:</b>\n"
-        f"• 🔒 <b>100% Free Public Market Intelligence:</b> No fees, no crypto, no trading signals, no financial solicitation.\n"
-        f"• 📸 <b>Verified Real-Action Visuals:</b> Every post is accompanied by authentic logistics action photos from actual port terminals, cargo ramps, and container yards.\n"
-        f"• 🏛️ <b>Authoritative Data Sources:</b> PAS, PPAP, MPWT, GDCE (ASYCUDA/CamDX), IATA, and regional carrier schedules.\n\n"
-        f"💎 <b>What You Receive Here (3x Daily Dispatches):</b>\n"
-        f"• 🚢 <b>PAS & PPAP Port Schedules:</b> Feeder berths, turnaround & yard status\n"
-        f"• 📈 <b>Freight Benchmarks:</b> Ocean container, air cargo & diesel indices\n"
-        f"• 🚛 <b>Trucking Corridors:</b> PP-Sihanoukville Expressway & Bavet/Poipet gates\n"
-        f"• 🏭 <b>Factory Supply Chain:</b> GFT raw material inflows & SEZ dry ports\n"
-        f"• 📋 <b>GDCE Customs:</b> ASYCUDA, CamDX, Form D/E, and RCEP compliance\n\n"
-        f"<i>👇 Tap any button below for instant verified data:</i>"
+        f"👋 Welcome <b>{name}</b>! You have direct access to verified logistics intelligence for Cambodia, powered by <b>Honkai Logistics (Cambodia) Co., Ltd.</b>\n\n"
+        f"🛡️ <b>Why Shippers Trust Honkai Logistics:</b>\n"
+        f"• 🚢 <b>Guaranteed Ocean Carrier Space:</b> Fixed allocations via Sihanoukville (PAS) and Cai Mep feeder connections.\n"
+        f"• 🚛 <b>Dedicated Trucking Fleet:</b> 2.5h Expressway haulage, GPS live tracking, and bonded cross-border shuttles.\n"
+        f"• ✈️ <b>Air Cargo Express:</b> Blocked space agreements for time-critical fashion, footwear, and sample shipments.\n"
+        f"• 📋 <b>GDCE Customs Brokerage:</b> ASYCUDA World & CamDX Green Lane pre-clearance with zero demurrage focus.\n"
+        f"• 🏭 <b>SEZ & Bonded Warehousing:</b> Royal Group PPSEZ, Manhattan SEZ, and Sihanoukville dry ports.\n\n"
+        f"💎 <b>Daily Scheduled Dispatches (3x Daily at 08:00, 13:30, 18:00 ICT):</b>\n"
+        f"Get actionable market updates and freight benchmarks with verified operations photos.\n\n"
+        f"<i>👇 Select an option below for instant freight data and service inquiries:</i>"
     )
 
     await update.message.reply_html(
@@ -482,6 +479,22 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     elif data == "btn_subscribe":
         add_subscriber(chat_id, None, None)
         await query.message.reply_html("🔔 <b>Notification preference updated:</b> You are actively subscribed to automated market intelligence digests!")
+
+    elif data == "btn_contact":
+        contact_card = (
+            "🤝 <b>HONKAI LOGISTICS (CAMBODIA) CO., LTD.</b>\n"
+            "📍 <b>Headquarters:</b> Phnom Penh, Kingdom of Cambodia\n"
+            "────────────────────────────\n"
+            "📞 <b>Dedicated Key Account Management:</b> 24/7 Dispatch Desk\n"
+            "🚢 <b>Ocean Freight Services:</b> FCL & LCL via Sihanoukville (PAS) & Cai Mep Feeder\n"
+            "🚛 <b>Expressway & Border Haulage:</b> 2.5h Phnom Penh-PAS & Daily Bavet/Poipet Convoys\n"
+            "✈️ <b>Air Freight Express:</b> Priority Air Cargo (PNH/TIA) for GFT & Samples\n"
+            "📋 <b>Customs Brokerage:</b> Certified GDCE ASYCUDA / CamDX Green Lane Clearance\n"
+            "🏭 <b>Warehousing & SEZ:</b> Royal Group PPSEZ, Manhattan SEZ & Dry Port Staging\n"
+            "────────────────────────────\n"
+            "💬 <i>Let us optimize your freight costs and secure your shipping schedules today!</i>"
+        )
+        await query.message.reply_html(contact_card)
 
     elif data.startswith("lang_"):
         chosen_lang = data.split("_")[1]

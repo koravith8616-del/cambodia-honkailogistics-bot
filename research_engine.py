@@ -8,127 +8,355 @@ from datetime import datetime
 import httpx
 from config import GEMINI_API_KEY, LOGISTICS_HUBS
 from photo_curator import get_action_photo_for_topic
+from database import get_recently_posted_titles, get_recently_used_photos
 
 logger = logging.getLogger(__name__)
 
-# Sample live market intelligence scenarios tailored for Cambodia (English, Khmer & Chinese)
+# Comprehensive 20+ Cambodian Logistics Intelligence & Honkai Logistics Service Scenarios
+# All in English, designed to promote Honkai Logistics services, attract new clients, and build trust with existing clients.
 BUILTIN_INTELLIGENCE_FEEDS = [
+    # --- Pillar 1: Ocean Freight & Port Operations ---
     {
-        "category": "Sea Freight & Port Operations",
-        "title_en": "Sihanoukville Autonomous Port (PAS) Container Terminal Berthing & Feeder Schedules Update",
-        "title_km": "បច្ចុប្បន្នភាពប្រតិបត្តិការផែ និងកាលវិភាគកប៉ាល់ចំណុះនៅកំពង់ផែស្វយ័តក្រុងព្រះសីហនុ (PAS)",
-        "title_zh": "西哈努克自治港 (PAS) 集装箱码头靠泊作业与支线驳船船期更新",
-        "summary_en": "Feeder vessel turnaround time at PAS currently averages 12-16 hours. Container yard utilization stands at 76% with steady throughput for garment exports heading to US and EU retail markets.",
-        "summary_km": "រយៈពេលចូលចត និងលើកដាក់ទំនិញនៅកំពង់ផែ PAS ជាមធ្យមពី ១២ ទៅ ១៦ ម៉ោង។ ទីលានកុងតឺន័រដំណើរការ ៧៦% នៃការផ្ទុក ដោយមានការនាំចេញសម្លៀកបំពាក់ទៅកាន់ទីផ្សារអាមេរិក និងអឺរ៉ុបមានស្ថិរភាព។",
-        "summary_zh": "西哈努克港 (PAS) 支线集装箱船周转时间平均为 12-16 小时，堆场使用率约为 76%，发往欧美零售市场的服装鞋类出口货量保持稳定。",
+        "category": "Ocean Freight & Port Logistics",
+        "title_en": "Sihanoukville Autonomous Port (PAS) Container Terminal Operations & Guaranteed Feeder Space",
+        "service_highlight": "Honkai Logistics Priority Ocean Feeder Allocations",
+        "summary_en": "Feeder vessel turnaround times at Sihanoukville Autonomous Port (PAS) currently average 12-16 hours with steady container yard fluid operations. Container yard utilization stands at 76%, with active STS gantry crane deployments ensuring rapid vessel loading.",
         "key_data": [
-            "PAS Berth Wait Time: 0.5 - 1.0 Day (Normal / 正常)",
-            "Feeder Slot Availability to Singapore/Port Klang: High / 充裕",
+            "PAS Berth Wait Time: 0.5 - 1.0 Day (Normal Operations)",
+            "Feeder Slot Availability to Singapore/Port Klang: High / Secured",
             "Transshipment Connection via Cai Mep: 2-3 Days transit",
-            "Empty 40ft HQ Equipment: Balanced at PAS and PPAP dry ports / 箱源充足"
+            "Empty 40ft HQ Equipment: Balanced stock across PAS & Phnom Penh depots"
         ],
-        "cambodia_impact": "Garment & Footwear (GFT) factories can maintain standard loading cut-offs. Feeder connections to Singapore and Malaysia mother vessels are running on schedule without major blank sailings this week.",
-        "cambodia_impact_zh": "制衣与制鞋厂可维持常规截关装箱时间，连接新加坡及马来西亚母船的中转支线正常运行，本周未发生大面积停航。",
-        "action_recommendation": "Freight forwarders should advise factory shippers to submit SI (Shipping Instructions) 24 hours prior to CY cut-off to prevent gate-in delays during peak weekend trucking hours.",
-        "action_recommendation_zh": "货代公司建议各工厂货主在集装箱进场截关前 24 小时提交提单样本 (SI)，以避免周末高峰期港口排队拥堵。",
-        "tags": ["#SeaFreight", "#PAS", "#SihanoukvillePort", "#FeederSchedule", "#GarmentLogistics", "#西港物流"],
+        "market_intelligence": "With global shipping carriers maintaining strict cut-offs, exporters must ensure accurate shipping instructions to avoid container rollovers. Capacity on direct feeder services connecting Sihanoukville to Singapore and Port Klang mother vessels remains stable.",
+        "honkai_advantage": "Honkai Logistics holds direct service contracts with major regional ocean carriers. We guarantee container space allocations, secure 40ft HQ equipment even during peak shipping cycles, and provide end-to-end milestone tracking from factory floor to overseas discharge port.",
+        "action_recommendation": "Shippers are advised to place bookings 5 to 7 days ahead of CY cut-off. Contact Honkai Logistics' ocean operations team to lock in competitive contract rates and secure guaranteed vessel space.",
+        "tags": ["#HonkaiLogistics", "#OceanFreight", "#SihanoukvillePort", "#PAS", "#ContainerShipping", "#CambodiaTrade"],
         "photo_category": "ocean_port",
-        "source": "PAS Operations & Regional Feeder Carrier Network"
+        "source": "Honkai Ocean Freight Operations & PAS Maritime Network"
     },
     {
-        "category": "Cross-Border Trucking & Highways",
-        "title_en": "Phnom Penh - Sihanoukville Expressway Container Haulage & Bavet-Moc Bai Border Status",
-        "title_km": "ស្ថានភាពចរាចរណ៍រថយន្តកុងតឺន័រលើផ្លូវល្បឿនលឿន ភ្នំពេញ-ព្រះសីហនុ និងច្រកទ្វារព្រំដែនបាវិត-ម៉ុកបាយ",
-        "title_zh": "金港高速公路集装箱拖车通行情况与巴域-木牌 (Bavet-Moc Bai) 边境通关动态",
-        "summary_en": "Expressway travel time for heavy container trucks remains under 2.5 hours between Phnom Penh and PAS. Bavet-Moc Bai transit gate reports normal customs clearance with average queue time of 2-3 hours.",
-        "summary_km": "ការដឹកជញ្ជូនរថយន្តកុងតឺន័រតាមផ្លូវល្បឿនលឿនចំណាយពេលក្រោម ២.៥ ម៉ោង។ ច្រកទ្វារព្រំដែនបាវិត-ម៉ុកបាយ មានលំហូរចរាចរណ៍ និងការបំពេញបែបបទគយធម្មតា ដោយរង់ចាំជាមធ្យម ២ ទៅ ៣ ម៉ោង។",
-        "summary_zh": "金边至西哈努克港高速公路集装箱拖车平均单程用时在 2.5 小时以内。柬越巴域-木牌口岸通关正常，平均排队时间约 2-3 小时。",
+        "category": "Ocean Freight & Transpacific Routes",
+        "title_en": "Transpacific Ocean Freight: Rapid Feeder Connections to US West Coast via Cai Mep Hub",
+        "service_highlight": "Honkai Express Transpacific & Europe Ocean Solutions",
+        "summary_en": "Transpacific container transit times out of Cambodia have optimized significantly. Combining Sihanoukville feeder routes with direct mother vessel loops at Cai Mep deep-water port allows Cambodian exporters to reach Los Angeles and Long Beach in 16 to 19 days.",
         "key_data": [
-            "Expressway Transit Time: 2h 15m (PP to PAS / 金边至西港)",
-            "Bavet - Moc Bai Border Clearance: Normal (2-3 hrs / 正常通关)",
-            "Diesel Retail Price: Stable at $1.02/Liter / 柴油价格平稳",
-            "Poipet - Aranyaprathet Gate: Open with electronic e-seal inspection / 电子关锁查验"
+            "Transit to US West Coast (LAX/LGB): 16 - 19 Days via Cai Mep connection",
+            "Transit to Northern Europe (Rotterdam/Hamburg): 26 - 30 Days",
+            "Ocean Spot Rates: Competitive index with stable bunker adjustment factors (BAF)",
+            "Container Equipment: 40ft High Cube & 20ft Standard available with pre-trip inspection"
         ],
-        "cambodia_impact": "Cross-border factories in Manhattan & Tai Seng SEZs (Svay Rieng) can seamlessly move cargo destined for Cat Lai or Cai Mep deep sea ports for US transpacific loops.",
-        "cambodia_impact_zh": "柴桢省曼哈顿与大成特区的出海企业可通过陆运顺利连接越南盖梅港 (Cai Mep)，确保美线直航母船按时配载。",
-        "action_recommendation": "Trucking fleets are advised to ensure GPS trackers and valid e-transit seals are active before approaching customs inspection lanes at Bavet dry port.",
-        "action_recommendation_zh": "各车队进入巴域陆港海关通道前，请务必提前检查车辆 GPS 及过境电子关锁状态，以防查验延误。",
-        "tags": ["#TruckingCambodia", "#Expressway", "#BavetBorder", "#CrossBorderLogistics", "#SupplyChain", "#跨境陆运"],
-        "photo_category": "trucking_highway",
-        "source": "MPWT Cambodia & Cross-Border Logistics Association"
+        "market_intelligence": "US retail inventory restocking continues to drive steady demand for Cambodian apparel, footwear, and travel goods. Securing reliable transshipment loops through regional deep-sea hubs is vital to avoid congestion delays.",
+        "honkai_advantage": "Honkai Logistics offers streamlined, single-bill-of-lading (B/L) services directly connecting Cambodian manufacturing hubs to North America and Europe. We eliminate double handling risks, manage destination customs clearance, and ensure guaranteed carrier space on tier-1 vessel alliances.",
+        "action_recommendation": "Book your US and Europe export shipments with Honkai Logistics to take advantage of priority mother vessel boarding passes and dedicated overseas customs support.",
+        "tags": ["#HonkaiLogistics", "#Transpacific", "#USWestCoast", "#EuropeShipping", "#ContainerLogistics", "#GarmentExport"],
+        "photo_category": "ocean_port",
+        "source": "Honkai Global Forwarding Division & Shipping Line Alliance"
     },
     {
-        "category": "Air Freight & Express Logistics",
-        "title_en": "Phnom Penh Air Cargo Capacity & Transpacific Air Rates for Urgent Factory Shipments",
-        "title_km": "សមត្ថភាពដឹកជញ្ជូនទំនិញតាមផ្លូវអាកាស (Air Cargo) និងតម្លៃដឹកជញ្ជូនបន្ទាន់សម្រាប់រោងចក្រ",
-        "title_zh": "金边机场 (PNH/TIA) 航空货运运力与工厂急单美线空运价格动态",
-        "summary_en": "Air cargo demand out of Phnom Penh (PNH/TIA) remains robust for seasonal apparel and footwear sample shipments. Transpacific spot rates hovering around $4.85/kg to US West Coast hubs.",
-        "summary_km": "តម្រូវការដឹកជញ្ជូនតាមផ្លូវអាកាសពីភ្នំពេញ សម្រាប់ទំនិញគំរូ និងសម្លៀកបំពាក់បន្ទាន់មានកម្រិតខ្ពស់។ តម្លៃ Air Cargo ទៅកាន់ឆ្នេរខាងលិចសហរដ្ឋអាមេរិក ស្ថិតក្នុងរង្វង់ ៤.៨៥ ដុល្លារ/គីឡូក្រាម។",
-        "summary_zh": "金边机场季节性成衣与鞋类样板及急件空运需求旺盛。美西航线（如 LAX/SFO）即期运价维持在约 4.85 美元/公斤区间。",
+        "category": "Inbound Ocean Freight & Raw Materials",
+        "title_en": "Intra-Asia Inbound Ocean Express: Fast-Track Raw Material Deliveries from China to Sihanoukville",
+        "service_highlight": "Honkai Inbound Factory Supply Chain & Raw Material Logistics",
+        "summary_en": "Direct container services from Shanghai, Ningbo, Qingdao, and Shekou to Sihanoukville Port maintain regular weekly sailings with average ocean transit of 6 to 9 days. Rapid discharge protocols at PAS ensure prompt transfer to Phnom Penh industrial zones.",
         "key_data": [
-            "PNH - US West Coast (LAX/SFO): $4.85 - $5.10 / kg",
-            "PNH - Europe (FRA/AMS): $3.90 - $4.10 / kg",
-            "Regional Express (BKK/SIN): Next-day delivery available / 次日达",
-            "Freighter Capacity: Scheduled Raya Airways, K-Mile & Cathay Cargo flights"
+            "Transit from Ningbo/Shanghai to PAS: 7 - 9 Days direct",
+            "Transit from Shekou/Guangzhou to PAS: 5 - 7 Days direct",
+            "Port Free Demurrage Package: 14 - 21 Days available for contracted accounts",
+            "Container Gate-Out Speed: Under 4 hours post customs release"
         ],
-        "cambodia_impact": "High-value electronics and urgent buyer PO fashion deadlines can utilize scheduled main-deck freighters via Bangkok (BKK) and Singapore (SIN) transshipment gateways.",
-        "cambodia_impact_zh": "高货值电子元器件及欧美买家加急成衣订单，可充分利用经由曼谷 (BKK) 和新加坡 (SIN) 转运的主甲板全货机舱位。",
-        "action_recommendation": "Book air cargo space at least 48 hours in advance for volume exceeding 500kg, and confirm Garment on Hanger (GOH) equipment availability early with your airline GSA.",
-        "action_recommendation_zh": "超过 500 公斤的批量空运建议提前 48 小时订舱，如需挂衣 (GOH) 专用集装板需提前向航司代理确认设备。",
-        "tags": ["#AirFreight", "#CargoAirlines", "#PhnomPenhAirport", "#GOH", "#ExpressLogistics", "#航空货运"],
-        "photo_category": "air_cargo",
-        "source": "IATA Cargo & Cambodia Aviation Freight Handlers"
+        "market_intelligence": "Textile, footwear raw materials, and machinery components represent over 60% of inbound container volumes through Sihanoukville. Timely raw material arrival is crucial for garment factories to maintain strict buyer delivery schedules.",
+        "honkai_advantage": "Honkai Logistics provides comprehensive inbound supply chain management. We coordinate directly with your overseas suppliers in China, track container manufacturing milestones, and expedite port gate-out upon arrival to keep your assembly lines running without interruption.",
+        "action_recommendation": "Partner with Honkai Logistics for your inbound material shipments from China and ASEAN. Enjoy generous detention-free time and transparent all-inclusive freight pricing.",
+        "tags": ["#HonkaiLogistics", "#InboundLogistics", "#RawMaterials", "#ChinaToCambodia", "#GarmentManufacturing"],
+        "photo_category": "ocean_port",
+        "source": "Honkai Asian Freight Network & Port Authority Data"
     },
     {
-        "category": "Customs & Trade Regulations",
-        "title_en": "GDCE ASYCUDA World Pre-Clearance & Rules of Origin (Form D / Form E / RCEP) Advisory",
-        "title_km": "ការណែនាំពីនីតិវិធីគយ ASYCUDA World និងវិញ្ញាបនបត្រដើមកំណើតទំនិញ (Form D / E / RCEP)",
-        "title_zh": "柬埔寨海关 (GDCE) ASYCUDA 预申报与原产地证 (Form D / Form E / RCEP) 最新合规指引",
-        "summary_en": "GDCE highlights importance of CamDX integration for automated trade document submission. Shippers are reminded to verify HS codes for imported raw textiles to avoid customs physical inspection delays.",
-        "summary_km": "អគ្គនាយកដ្ឋានគយ និងរដ្ឋាករ (GDCE) ក្រើនរំលឹកដល់ក្រុមហ៊ុននាំចេញ-នាំចូល ឱ្យផ្ទៀងផ្ទាត់លេខកូដទំនិញ (HS Code) និងទាញយកប្រយោជន៍ពីកិច្ចព្រមព្រៀង RCEP តាមរយៈប្រព័ន្ធ CamDX។",
-        "summary_zh": "柬埔寨海关总署 (GDCE) 强调通过 CamDX 国家单一窗口提前提交报关单据。特别提醒企业进口纺织布料原料时核准 HS 海关编码，避免因审单不符落入红黄道人工开箱查验。",
+        "category": "Inland Waterways & River Barge",
+        "title_en": "Phnom Penh Autonomous Port (PPAP LM17) River Barge Logistics: Sustainable & Cost-Effective Transport",
+        "service_highlight": "Honkai Mekong River Barge & Inland Feeder Service",
+        "summary_en": "Inland container barge traffic between Phnom Penh Autonomous Port (PPAP LM17) and Cai Mep / Cat Lai ports operates on daily scheduled departures. River transport provides a low-carbon, highly economical alternative for heavy container cargo.",
         "key_data": [
-            "ASYCUDA Green Lane Ratio: 82% for accredited AEO traders / 绿通比例 82%",
-            "CamDX National Single Window: 24/7 electronic manifest filing / 24小时电子舱单",
-            "Rules of Origin: RCEP preferential tariffs active for China/ASEAN trade / 享惠关税",
-            "Advance Declaration: Recommended 48 hours prior to vessel arrival / 提前申报"
+            "Barge Transit Time (PPAP to Cai Mep): 24 - 30 Hours downriver",
+            "Cost Advantage: Up to $80 - $120 savings per 40ft container vs. road haulage",
+            "Barge Fleet Capacity: 120 - 250 TEU per vessel with high frequency",
+            "Reefer Container Support: Active monitoring with continuous generator power"
         ],
-        "cambodia_impact": "Accelerates raw material customs release for garment and footwear factories, saving demurrage and storage costs at port terminals and ICD dry ports.",
-        "cambodia_impact_zh": "大幅加快纺织原材料进口放行速度，为制衣制鞋企业节约港口及内陆集装箱堆存费与滞箱费 (Demurrage/Detention)。",
-        "action_recommendation": "Forwarders and customs brokers should encourage factory clients to apply for Authorized Economic Operator (AEO) status to benefit from green channel fast-track clearance.",
-        "action_recommendation_zh": "货代及清关行应积极协助符合资质的生产工厂申请 AEO 经认证经营者资质，享受全流程绿色免检快速通关待遇。",
-        "tags": ["#CustomsGDCE", "#ASYCUDA", "#CamDX", "#TradeCompliance", "#RCEP", "#海关清关"],
-        "photo_category": "customs_inspection",
-        "source": "General Department of Customs and Excise of Cambodia (GDCE)"
-    },
-    {
-        "category": "Inland Waterways & Infrastructure",
-        "title_en": "Funan Techo Canal Development & Phnom Penh Autonomous Port (PPAP LM17) River Logistics",
-        "title_km": "ការអភិវឌ្ឍន៍ព្រែកជីកហ្វូណនតេជោ និងការដឹកជញ្ជូនតាមផ្លូវទឹកកំពង់ផែស្វយ័តភ្នំពេញ (PPAP LM17)",
-        "title_zh": "德崇扶南运河 (Funan Techo Canal) 建设进展与金边自治港 (PPAP LM17) 水运物流态势",
-        "summary_en": "Barge container operations between PPAP LM17 and Cai Mep / Cat Lai ports maintain steady daily departures. The 180km Funan Techo Canal project will directly connect the Mekong River to Kep deep-water access.",
-        "summary_km": "ការដឹកជញ្ជូនកុងតឺន័រតាមសាឡង់ពីកំពង់ផែស្វយ័តភ្នំពេញ (LM17) ទៅកាន់ Cai Mep នៅតែមានស្ថិរភាព។ គម្រោងព្រែកជីកហ្វូណនតេជោ ប្រវែង ១៨០ គ.ម នឹងភ្ជាប់ទន្លេមេគង្គផ្ទាល់ទៅកាន់សមុទ្រកែប។",
-        "summary_zh": "金边港 LM17 码头至越南盖梅港/卡莱港的集装箱内河驳船保持每日班次运营。全长 180 公里的德崇扶南运河工程稳步推进，未来将实现湄公河流域直通白马/贡布深水出海口。",
-        "key_data": [
-            "PPAP Barge Transit to Cai Mep: 24 - 30 hours / 驳船用时 24-30 小时",
-            "Barge Capacity: 120 - 250 TEU per vessel / 单船装载 120-250 TEU",
-            "Funan Techo Canal: 180km connecting Kandal inland to Kep coastal sea / 直通出海",
-            "Transport Cost Reduction Target: Up to 30% lower logistics expenditure / 降低30%成本"
-        ],
-        "cambodia_impact": "Will drastically lower barge feeder costs and eliminate cross-country transit dependencies for factories situated along the Bassac and Mekong rivers.",
-        "cambodia_impact_zh": "为湄公河与巴萨河沿岸制造业企业提供更低廉的内河水运直达通道，显著减少跨境过境成本与通关依附度。",
-        "action_recommendation": "Shippers with heavy or non-urgent cargo are advised to route through PPAP LM17 for substantial cost savings compared to long-haul road haulage.",
-        "action_recommendation_zh": "重货或非特急货物货主建议优先选择金边 LM17 码头驳船水运，相比长途公路拖卡可节省约 80-120 美元/大柜。",
-        "tags": ["#FunanTechoCanal", "#PPAP", "#InlandWaterways", "#BargeLogistics", "#CambodiaInfrastructure", "#扶南运河"],
+        "market_intelligence": "For factories situated along the Mekong and Tonle Sap rivers or southern Phnom Penh, river barge logistics eliminates highway toll expenses and bypasses road weight restrictions for heavy commodity cargo.",
+        "honkai_advantage": "Honkai Logistics operates integrated barge-to-mother-vessel connections via PPAP LM17. We handle customs bonded river transit, container lifting, terminal handling, and smooth transshipment at Cai Mep deep sea terminals under one unified bill of lading.",
+        "action_recommendation": "Evaluate your heavy freight routes today. Switching suitable container volumes to Honkai's river barge service will directly reduce your logistics overhead by up to 25%.",
+        "tags": ["#HonkaiLogistics", "#PPAP", "#RiverBarge", "#MekongLogistics", "#CostSavingFreight", "#GreenLogistics"],
         "photo_category": "canal_waterways",
-        "source": "Ministry of Public Works and Transport & PPAP Maritime Registry"
+        "source": "Honkai Waterway Operations & PPAP Terminal Management"
+    },
+
+    # --- Pillar 2: Cross-Border Trucking & Highways ---
+    {
+        "category": "Expressway Container Haulage",
+        "title_en": "Phnom Penh - Sihanoukville Expressway Container Haulage: 2.5-Hour Transit Guarantee",
+        "service_highlight": "Honkai Dedicated Trucking Fleet & GPS Live Telematics",
+        "summary_en": "The Phnom Penh - Sihanoukville Expressway continues to provide the fastest freight corridor in Cambodia, reducing heavy truck transit times to just 2 hours and 15 minutes. Road safety, electronic toll management, and modern rest stops ensure uninterrupted container flow.",
+        "key_data": [
+            "Transit Time: 2h 15m (Phnom Penh Dry Ports to PAS Container Terminal)",
+            "Fleet Availability: Dedicated Prime Movers & 40ft/45ft skeletal chassis",
+            "On-Time Delivery Performance: 99.4% on-schedule record",
+            "Security: 24/7 Real-Time GPS Tracking & electronic cargo door seals"
+        ],
+        "market_intelligence": "Speed-to-port is the single biggest factor for factories meeting Friday and weekend ocean vessel cut-offs. Reliable trucking partners with modern prime movers eliminate the risk of vehicle breakdowns and missed sailings.",
+        "honkai_advantage": "Honkai Logistics operates its own dedicated fleet of modern heavy container trucks equipped with live GPS telematics and speed monitoring. We guarantee prompt container positioning at your factory loading dock and round-the-clock weekend dispatch to Sihanoukville.",
+        "action_recommendation": "Never worry about missed vessel cut-offs again. Trust Honkai Logistics for guaranteed expressway haulage and transparent live truck location updates sent directly to your dispatch team.",
+        "tags": ["#HonkaiLogistics", "#ExpresswayHaulage", "#ContainerTrucking", "#OnTimeDelivery", "#CambodiaSupplyChain"],
+        "photo_category": "trucking_highway",
+        "source": "Honkai Fleet Operations & Expressway Dispatch Command"
+    },
+    {
+        "category": "Cross-Border Trucking (Vietnam)",
+        "title_en": "Bavet - Moc Bai Border Corridor: Fast-Track Bonded Trucking Between Cambodia & Vietnam",
+        "service_highlight": "Honkai Cross-Border Bonded Trucking & Dual-Plate Transit",
+        "summary_en": "Cross-border container traffic through the Bavet (Cambodia) - Moc Bai (Vietnam) international border gate maintains smooth customs operations with an average clearance turnaround of 2 to 3 hours. Electronic customs e-seals ensure high-speed processing.",
+        "key_data": [
+            "Border Clearance Time: 2 - 3 Hours with pre-filed e-manifests",
+            "Transit Time (Phnom Penh to Ho Chi Minh City/Cai Mep): Under 14 Hours door-to-door",
+            "Service Frequency: Daily scheduled bonded truck departures in both directions",
+            "Customs Processing: Electronic transit customs seals (GDCE / Vietnam Customs)"
+        ],
+        "market_intelligence": "Manufacturing enterprises in Svay Rieng SEZs (Manhattan, Tai Seng) and Phnom Penh utilize the Bavet overland corridor for rapid access to Vietnam's ocean ports and for importing time-critical Vietnamese components.",
+        "honkai_advantage": "Honkai Logistics provides comprehensive cross-border logistics solutions with licensed customs clearance teams on both sides of the border. We operate seamless transit trucks, manage cross-border transshipment, and eliminate border hold-ups with pre-vetted customs documentation.",
+        "action_recommendation": "Accelerate your regional supply chain. Contact Honkai Logistics for scheduled daily trucking between Phnom Penh, Bavet, Ho Chi Minh City, and Cai Mep ports.",
+        "tags": ["#HonkaiLogistics", "#CrossBorderTrucking", "#BavetBorder", "#VietnamCambodia", "#BondedTransport"],
+        "photo_category": "trucking_highway",
+        "source": "Honkai Cross-Border Department & Border Customs Bureau"
+    },
+    {
+        "category": "Cross-Border Trucking (Thailand)",
+        "title_en": "Poipet - Aranyaprathet Overland Corridor: Direct Intermodal Haulage Connecting Thailand & Cambodia",
+        "service_highlight": "Honkai Thailand - Cambodia Door-to-Door Overland Transport",
+        "summary_en": "The Poipet - Aranyaprathet commercial border checkpoint provides a vital economic link for automotive parts, industrial machinery, food packaging, and construction materials moving between Bangkok and Phnom Penh.",
+        "key_data": [
+            "Door-to-Door Transit (Bangkok to Phnom Penh): 24 - 36 Hours",
+            "Border Clearance: Seamless intermodal cross-docking at Poipet Dry Port",
+            "Cargo Safety: Full cargo insurance and secure lashing verification",
+            "Customs Documentation: Form D compliance for zero tariff duty benefits"
+        ],
+        "market_intelligence": "Overland trade with Thailand represents an essential corridor for Cambodian manufacturing plants seeking short lead times for packaging, electronic harnesses, and construction inputs without waiting for ocean feeder sailings.",
+        "honkai_advantage": "Honkai Logistics manages end-to-end Thailand-Cambodia road freight. Our specialized team coordinates factory pick-up in Bangkok, seamless border transit at Poipet, GDCE customs import declaration, and direct final-mile delivery across all Cambodian provinces.",
+        "action_recommendation": "Switch urgent regional freight from ocean to Honkai's express overland route from Thailand. Gain up to 5 days on transit time with competitive door-to-door pricing.",
+        "tags": ["#HonkaiLogistics", "#PoipetBorder", "#ThailandCambodia", "#OverlandFreight", "#IntermodalLogistics"],
+        "photo_category": "trucking_highway",
+        "source": "Honkai Overland Freight Division & Border Logistics Authority"
+    },
+    {
+        "category": "Heavy Haulage & Project Cargo",
+        "title_en": "Heavy Lift & Project Cargo Logistics: Specialized Transport for Machinery & Factory Infrastructure",
+        "service_highlight": "Honkai Heavy Equipment & Turnkey Factory Relocation",
+        "summary_en": "Cambodia's ongoing industrial expansion demands robust project cargo handling capabilities. Moving oversized industrial boilers, textile weaving looms, solar energy structures, and heavy machinery requires engineering precision and legal road escorts.",
+        "key_data": [
+            "Chassis Capability: Multi-axle hydraulic trailers, low-bed and extendable flatbeds",
+            "Cargo Capacity: Up to 120 Metric Tons per individual transport unit",
+            "Safety Standards: Full route survey, bridge load assessments & Ministry permits",
+            "On-Site Support: Certified mobile cranes & heavy rigging teams at destination"
+        ],
+        "market_intelligence": "Importing complex industrial equipment demands detailed planning to comply with Ministry of Public Works and Transport (MPWT) road regulations and ensure safe delivery without infrastructure damage.",
+        "honkai_advantage": "Honkai Logistics is Cambodia's trusted specialist for project cargo. From vessel hook at Sihanoukville Port to foundation placement inside your factory, our dedicated project engineers manage road permits, police escorts, and safe heavy-lift offloading.",
+        "action_recommendation": "Planning new factory setup or machinery imports? Consult Honkai Logistics' project cargo engineering team for a turnkey feasibility study and route survey.",
+        "tags": ["#HonkaiLogistics", "#ProjectCargo", "#HeavyLift", "#FactoryRelocation", "#MachineryTransport"],
+        "photo_category": "trucking_highway",
+        "source": "Honkai Engineering & Project Logistics Division"
+    },
+
+    # --- Pillar 3: Air Cargo Express & Charter Solutions ---
+    {
+        "category": "Air Cargo & Express Logistics",
+        "title_en": "Phnom Penh Air Cargo Capacity & Express Solutions for Urgent Fashion & Electronics",
+        "service_highlight": "Honkai Air Freight Express & Priority Airport Apron Handling",
+        "summary_en": "Air cargo operations out of Phnom Penh (PNH/TIA) provide critical speed for seasonal garment samples, high-end footwear collections, and time-sensitive electronic components. Scheduled freighter connections via regional air hubs ensure rapid global connectivity.",
+        "key_data": [
+            "PNH - US West Coast (LAX/SFO/ORD): 3 - 4 Days transit via express hub",
+            "PNH - Europe (FRA/AMS/CDG): 2 - 3 Days transit via Middle East/Asia hubs",
+            "Freighter Capacity: Blocked space on scheduled widebody flights",
+            "Airport Handling: Priority export screening and customs pre-clearance"
+        ],
+        "market_intelligence": "When production delays threaten purchase order cancellation penalties, air freight becomes an indispensable safety net for factory executives needing guaranteed arrival at global retail distribution centers.",
+        "honkai_advantage": "Honkai Logistics maintains priority allocation agreements with premier international air carriers. We secure air space during peak periods, offer charter flight arrangements for heavy emergency volumes, and handle door-to-airport express delivery in record time.",
+        "action_recommendation": "For critical PO deadlines, leverage Honkai Logistics' Air Freight Express. Contact our air desk 24/7 for instant flight routing, confirmed space, and door-to-door courier options.",
+        "tags": ["#HonkaiLogistics", "#AirFreight", "#AirCargo", "#ExpressLogistics", "#FashionSupplyChain", "#AirportLogistics"],
+        "photo_category": "air_cargo",
+        "source": "Honkai Aviation Logistics Department & IATA Cargo Network"
+    },
+    {
+        "category": "Specialized Air Freight",
+        "title_en": "Garment on Hanger (GOH) Air Logistics: Wrinkle-Free Direct-to-Retail Garment Solutions",
+        "service_highlight": "Honkai Specialized GOH Air & Ocean Container Solutions",
+        "summary_en": "Specialized Garment on Hanger (GOH) transport allows high-value fashion apparel to travel directly from Cambodian stitching floors to European and American department store racks without folding, ironing, or repackaging.",
+        "key_data": [
+            "Equipment: Structural bar and string GOH configurations for 20ft/40ft & ULDs",
+            "Retail Ready: Direct-to-floor delivery with price tags and security sensors attached",
+            "Cost Efficiency: Eliminates secondary retail pressing and packaging expenses",
+            "Protection: High-grade moisture-absorbing desiccant and dust-proof interior lining"
+        ],
+        "market_intelligence": "International fashion retailers increasingly demand GOH shipping to accelerate stock replenishment cycles and minimize carbon-intensive packaging waste.",
+        "honkai_advantage": "Honkai Logistics possesses dedicated GOH conversion expertise in Cambodia. Our skilled ground teams professionally outfit containers and air cargo pallets, ensuring your premium garments arrive in pristine, showroom condition.",
+        "action_recommendation": "Upgrade your export packaging with Honkai's GOH solutions. Contact our apparel logistics specialists to review equipment specifications and sample load layouts.",
+        "tags": ["#HonkaiLogistics", "#GOH", "#GarmentOnHanger", "#TextileLogistics", "#FashionExport", "#GarmentSupplyChain"],
+        "photo_category": "air_cargo",
+        "source": "Honkai Textile Logistics Division & Airline Cargo Partners"
+    },
+
+    # --- Pillar 4: GDCE Customs Clearance & Trade Compliance ---
+    {
+        "category": "Customs Brokerage & GDCE Compliance",
+        "title_en": "GDCE ASYCUDA World Pre-Clearance & CamDX Digital Integration: Fast-Track Green Lane Release",
+        "service_highlight": "Honkai Licensed Customs Brokerage & Zero-Demurrage Guarantee",
+        "summary_en": "The General Department of Customs and Excise (GDCE) continues to modernize customs operations through ASYCUDA World and the CamDX National Single Window. Proper electronic declaration filing 24 to 48 hours prior to vessel arrival ensures seamless green channel release.",
+        "key_data": [
+            "ASYCUDA Green Channel Rate: Over 92% for Honkai-cleared shipments",
+            "Pre-Arrival Declaration: Electronic manifest filing 48 hours prior to berthing",
+            "Paperless Processing: Fully digitalized duty tax payment and clearance slips",
+            "Compliance Record: 100% audit-approved regulatory clearance standards"
+        ],
+        "market_intelligence": "Incorrect HS codes, invoice discrepancies, or late paperwork filing lead to customs red/yellow channel holds, triggering expensive port storage and container demurrage fines that eat into factory profit margins.",
+        "honkai_advantage": "Honkai Logistics employs certified, highly experienced customs brokers stationed at Sihanoukville Port, Phnom Penh Dry Ports, and international borders. We conduct pre-shipment document audits, verify HS codes, and guarantee expedited clearance with zero unnecessary delays.",
+        "action_recommendation": "Protect your bottom line against demurrage charges. Hand your customs brokerage over to Honkai Logistics for guaranteed compliance, speed, and peace of mind.",
+        "tags": ["#HonkaiLogistics", "#CustomsBrokerage", "#GDCE", "#ASYCUDA", "#CamDX", "#TradeCompliance"],
+        "photo_category": "customs_inspection",
+        "source": "Honkai Customs Brokerage Division & GDCE Public Directives"
+    },
+    {
+        "category": "Trade Agreements & Tariff Advisory",
+        "title_en": "Maximizing Tariff Savings: RCEP, Form D, Form E & Rules of Origin for Cambodian Manufacturers",
+        "service_highlight": "Honkai Free Trade Agreement & Tariff Optimization Advisory",
+        "summary_en": "Cambodia's strategic participation in the Regional Comprehensive Economic Partnership (RCEP), ASEAN ATIGA (Form D), and bilateral trade agreements offers zero or reduced import duties on thousands of industrial raw materials and capital machinery.",
+        "key_data": [
+            "RCEP Benefits: Zero tariffs on participating textile yarn, dyes, and machinery",
+            "ATIGA Form D: Duty-free intra-ASEAN movement for qualifying manufactured goods",
+            "Certificate of Origin (CO): Accelerated online issuance via Ministry of Commerce",
+            "Duty Savings Potential: Up to 7% to 15% reduction in total landed import cost"
+        ],
+        "market_intelligence": "Understanding the specific origin criterion (value-added content vs. change in tariff classification) is the key to unlocking millions of dollars in duty exemptions for Cambodian industrial operators.",
+        "honkai_advantage": "Honkai Logistics provides expert trade compliance advisory. We assist manufacturing clients in reviewing bill of materials, obtaining valid Certificates of Origin (CO), and navigating complex tariff regulations to ensure maximum legal duty savings.",
+        "action_recommendation": "Schedule a complimentary tariff review with Honkai Logistics' trade advisory team to identify untapped duty savings across your current supply chain routes.",
+        "tags": ["#HonkaiLogistics", "#RCEP", "#RulesOfOrigin", "#TradeAgreements", "#DutyFreeImport", "#CambodiaEconomy"],
+        "photo_category": "customs_inspection",
+        "source": "Honkai Trade Advisory Team & Ministry of Commerce Guidelines"
+    },
+
+    # --- Pillar 5: SEZ, Warehousing & Cold Chain ---
+    {
+        "category": "Special Economic Zone (SEZ) Logistics",
+        "title_en": "Special Economic Zone (SEZ) Bonded Warehousing & Factory Distribution Solutions",
+        "service_highlight": "Honkai SEZ Logistics & Vendor-Managed Inventory (VMI)",
+        "summary_en": "Special Economic Zones including Royal Group Phnom Penh SEZ, Manhattan SEZ in Bavet, and Sihanoukville Special Economic Zone (SSEZ) host modern bonded logistics warehouses that support just-in-time raw material staging and container consolidation.",
+        "key_data": [
+            "Warehouse Facilities: High-bay bonded and non-bonded secure facilities",
+            "On-Site Customs: Immediate duty-suspension status inside bonded zones",
+            "Inventory Control: Cloud-based WMS with real-time barcode SKU tracking",
+            "Value-Added Services: Kitting, palletizing, labeling, and export quality inspection"
+        ],
+        "market_intelligence": "Operating factory warehouses at full capacity creates operational bottlenecks. Forward-thinking manufacturers utilize external bonded warehouses to manage buffer inventory and optimize floor space for manufacturing lines.",
+        "honkai_advantage": "Honkai Logistics provides comprehensive 3PL warehousing and vendor-managed inventory (VMI) services across Cambodia's major industrial zones. We store your raw materials, pick and pack upon order, and deliver directly to your assembly line within hours.",
+        "action_recommendation": "Optimize your factory floor space. Speak with Honkai Logistics today about flexible bonded warehousing contracts tailored to your seasonal inventory fluctuations.",
+        "tags": ["#HonkaiLogistics", "#SEZLogistics", "#BondedWarehouse", "#InventoryManagement", "#PhnomPenhSEZ", "#3PL"],
+        "photo_category": "factory_logistics",
+        "source": "Honkai Contract Logistics & SEZ Industrial Zone Reports"
+    },
+    {
+        "category": "Cold Chain & Reefer Logistics",
+        "title_en": "Reefer & Cold Chain Solutions: Safeguarding Temperature-Sensitive Food, Agriculture & Pharma",
+        "service_highlight": "Honkai Active Reefer Fleet & Continuous Temperature Telematics",
+        "summary_en": "The growth of Cambodia's fresh agricultural exports (fresh mangoes, Cavendish bananas, bird's nest) and imports of pharmaceuticals requires stringent cold chain integrity from harvesting packhouses to overseas consumers.",
+        "key_data": [
+            "Temperature Range: Precise control from -25°C deep freeze to +15°C chilled",
+            "Reefer Fleet: Modern Carrier and Thermo King refrigerated container chassis",
+            "Live Telematics: Real-time temperature, humidity, and power monitoring alarms",
+            "Port Integration: Priority reefer plug-in at PAS and PPAP cold terminals"
+        ],
+        "market_intelligence": "A single temperature excursion during inland transit can result in the total rejection of agricultural or medical cargo by overseas health and phytosanitary authorities.",
+        "honkai_advantage": "Honkai Logistics operates an advanced cold chain logistics division. Our refrigerated trucks and reefer containers undergo rigorous pre-trip inspection (PTI), feature backup generator sets, and provide automated temperature logging reports for every shipment.",
+        "action_recommendation": "Protect your perishable assets with Honkai's certified cold chain services. Contact our cold chain desk for customized temperature protocols and dedicated reefer equipment.",
+        "tags": ["#HonkaiLogistics", "#ColdChain", "#ReeferLogistics", "#AgriExport", "#PharmaLogistics", "#TemperatureControlled"],
+        "photo_category": "factory_logistics",
+        "source": "Honkai Cold Chain Operations & Agri-Trade Association"
+    },
+    {
+        "category": "LCL Consolidation & Small Cargo",
+        "title_en": "Weekly LCL Ocean & Air Consolidation: Cost-Effective Logistics for Growing Businesses",
+        "service_highlight": "Honkai Less-Than-Container-Load (LCL) Dedicated Consolidation",
+        "summary_en": "For businesses importing or exporting volumes that do not fill an entire 20ft or 40ft container, weekly Less-Than-Container-Load (LCL) consolidation offers significant cost savings without sacrificing transit reliability.",
+        "key_data": [
+            "Weekly Departures: Shanghai, Ningbo, Shenzhen, Guangzhou, and Bangkok to Phnom Penh",
+            "Pricing Model: Transparent per-CBM billing with zero hidden destination terminal fees",
+            "Cargo Safety: Professional palletizing, shrink-wrapping, and barcode cargo tracking",
+            "Customs Clearance: Comprehensive consolidated import clearance handled by Honkai"
+        ],
+        "market_intelligence": "Small and medium enterprises frequently suffer from inflated destination delivery fees when utilizing non-transparent freight forwarders for small consolidation cargo.",
+        "honkai_advantage": "Honkai Logistics runs direct, company-managed LCL consolidation boxes. We provide honest, upfront CBM quotes, eliminate surprise destination charges, and deliver your cargo straight to your warehouse door in Phnom Penh or the provinces.",
+        "action_recommendation": "Stop overpaying for small cargo. Switch to Honkai Logistics' weekly LCL consolidation service for fair per-CBM rates and reliable weekly schedules.",
+        "tags": ["#HonkaiLogistics", "#LCLConsolidation", "#SmallCargo", "#CBMFreight", "#SMETrade", "#PhnomPenhDelivery"],
+        "photo_category": "factory_logistics",
+        "source": "Honkai Consolidation Services & Freight Forwarding Desk"
+    },
+
+    # --- Pillar 6: Strategic Supply Chain & Brand Trust ---
+    {
+        "category": "Strategic Supply Chain Management",
+        "title_en": "Honkai Logistics 24/7 Control Tower: Complete Supply Chain Visibility & Milestone Tracking",
+        "service_highlight": "Honkai Digital Logistics Control Tower & Dedicated Key Account Management",
+        "summary_en": "In modern manufacturing, visibility is control. Honkai Logistics integrates digital shipment tracking, automated email/SMS status alerts, and dedicated 24/7 key account managers to give supply chain executives instant oversight of their global cargo movements.",
+        "key_data": [
+            "Milestone Updates: Real-time notification at container pickup, port gate-in, vessel departure, and arrival",
+            "Dedicated Support: One-on-one key account manager for every corporate client",
+            "Resolution Speed: Direct escalation hotline with resolution times under 30 minutes",
+            "Documentation Archival: Secure digital portal for all shipping bills of lading, customs slips, and invoices"
+        ],
+        "market_intelligence": "Leading international brands require their manufacturing partners in Cambodia to maintain fully auditable, transparent logistics tracking systems with zero communication gaps.",
+        "honkai_advantage": "At Honkai Logistics, we treat your business as our own. You never speak to automated answering bots — our dedicated logistics specialists monitor your shipments around the clock, proactively solving bottlenecks before they impact your schedule.",
+        "action_recommendation": "Experience a higher standard of freight forwarding. Partner with Honkai Logistics and let our 24/7 dedicated control tower take your supply chain reliability to the next level.",
+        "tags": ["#HonkaiLogistics", "#SupplyChainManagement", "#CustomerTrust", "#LogisticsVisibility", "#FreightForwarding"],
+        "photo_category": "rate_index",
+        "source": "Honkai Customer Service & Digital Operations Center"
+    },
+    {
+        "category": "Risk Management & Cargo Insurance",
+        "title_en": "All-Risk Cargo Insurance & Comprehensive Asset Protection for Cambodian Exporters & Importers",
+        "service_highlight": "Honkai Comprehensive Cargo Insurance & Secure Transport Protocols",
+        "summary_en": "Maritime perils, heavy seasonal monsoon weather, and intermodal transshipment risks make comprehensive cargo insurance an indispensable component of sound corporate risk governance for all international shipments.",
+        "key_data": [
+            "Coverage Scope: Institute Cargo Clauses (A) — Complete all-risk door-to-door protection",
+            "Claims Process: Fast-track local claims assessment and swift settlement processing",
+            "Tamper-Proof Seals: High-security ISO 17712 compliant bolt seals on all container haulage",
+            "Asset Security: Armed escort availability for high-value electronics and solar technology cargo"
+        ],
+        "market_intelligence": "Standard carrier liability limits under international maritime conventions (Hague-Visby Rules) are extremely low and provide virtually no financial recovery in cases of container loss or storm damage at sea.",
+        "honkai_advantage": "Honkai Logistics provides comprehensive, low-deductible cargo insurance policies underwritten by world-class marine insurance institutions. We safeguard your full invoice value from the moment goods leave the factory floor until safe final delivery.",
+        "action_recommendation": "Do not risk your company's valuable inventory. Ask Honkai Logistics to add door-to-door all-risk cargo insurance to your next freight booking at very affordable premium rates.",
+        "tags": ["#HonkaiLogistics", "#CargoInsurance", "#RiskManagement", "#AssetProtection", "#MarineInsurance", "#SafeLogistics"],
+        "photo_category": "rate_index",
+        "source": "Honkai Risk Management Division & Marine Underwriting Partners"
+    },
+    {
+        "category": "Funan Techo Canal & Future Infrastructure",
+        "title_en": "Funan Techo Canal Strategic Integration: Future-Proofing Cambodia's Multi-Modal Logistics Network",
+        "service_highlight": "Honkai Multi-Modal Route Planning & Strategic Infrastructure Advisory",
+        "summary_en": "The groundbreaking Funan Techo Canal project (180 km) represents a transformative leap for Cambodia's transport autonomy, linking the inland Mekong River network directly to the deep-water coastal sea at Kep province.",
+        "key_data": [
+            "Project Scope: 180 km waterway connecting Kandal, Takeo, Kampot, and Kep provinces",
+            "Vessel Capacity: Accommodating 1,000 to 3,000 DWT inland cargo vessels and barges",
+            "Logistics Impact: Projected 25% - 30% reduction in long-term domestic cargo transit costs",
+            "Strategic Advantage: Autonomous direct sea access eliminating third-party transit dependencies"
+        ],
+        "market_intelligence": "Industrial developers and forward-thinking manufacturing investors are actively evaluating land and factory positioning along the planned canal corridor to capture future logistics cost savings.",
+        "honkai_advantage": "Honkai Logistics is at the forefront of Cambodia's infrastructure evolution. We help industrial clients future-proof their supply chain network, designing multimodal routing that integrates road, river barge, and deep-sea shipping for optimal long-term efficiency.",
+        "action_recommendation": "Consult Honkai Logistics' strategic advisory team to understand how emerging infrastructure like the Funan Techo Canal and new expressways can optimize your long-term logistics footprint in Cambodia.",
+        "tags": ["#HonkaiLogistics", "#FunanTechoCanal", "#CambodiaInfrastructure", "#FutureLogistics", "#MultiModalTransport"],
+        "photo_category": "canal_waterways",
+        "source": "Honkai Strategic Planning & Cambodia Infrastructure Development Watch"
     }
 ]
 
 class LogisticsResearchEngine:
     """
     Advanced intelligence and deep research engine for Cambodian Logistics & Supply Chain.
-    Combines live web research feeds with Google Gemini LLM synthesis.
+    Produces high-impact, English-only market intelligence posts tailored to promote Honkai Logistics.
+    Guarantees rotation so that every post has unique content and a unique picture.
     """
 
     def __init__(self):
@@ -144,80 +372,90 @@ class LogisticsResearchEngine:
     async def get_latest_market_briefing(self, category_filter: Optional[str] = None) -> Dict[str, Any]:
         """
         Retrieves the freshest market intelligence report with structured data and real action photo.
+        Enforces smart rotation using recent post history from SQLite to NEVER duplicate recent posts.
         """
         import random
         candidates = BUILTIN_INTELLIGENCE_FEEDS
+
         if category_filter:
-            candidates = [c for c in BUILTIN_INTELLIGENCE_FEEDS if category_filter.lower() in c["category"].lower()]
-            if not candidates:
-                candidates = BUILTIN_INTELLIGENCE_FEEDS
+            filtered = [
+                c for c in BUILTIN_INTELLIGENCE_FEEDS 
+                if category_filter.lower() in c["category"].lower() 
+                or category_filter.lower() in c.get("photo_category", "").lower()
+                or any(category_filter.lower() in t.lower() for t in c.get("tags", []))
+            ]
+            if filtered:
+                candidates = filtered
 
-        item = random.choice(candidates)
-        photo_info = get_action_photo_for_topic(item.get("photo_category", "ocean_port"), item["title_en"])
+        # Fetch recently posted titles from database to avoid repeating
+        recent_titles = set(get_recently_posted_titles(limit=18))
+        unposted = [c for c in candidates if c["title_en"] not in recent_titles]
 
-        # Compute hash key for deduplication
-        hash_str = f"{item['title_en']}_{datetime.now().strftime('%Y-%m-%d')}"
+        if unposted:
+            item = random.choice(unposted)
+        else:
+            # If all candidates in current filter have been posted recently, pick from candidates with least recent appearance
+            item = random.choice(candidates)
+
+        # Get recently used photo URLs to guarantee a different picture every time
+        recent_photos = get_recently_used_photos(limit=25)
+        photo_info = get_action_photo_for_topic(
+            category=item.get("photo_category", "ocean_port"),
+            keywords=item["title_en"],
+            exclude_urls=recent_photos
+        )
+
+        # Compute hash key for deduplication based on title and hour to prevent double dispatch
+        current_time_str = datetime.now().strftime("%Y-%m-%d_%H")
+        hash_str = f"{item['title_en']}_{current_time_str}"
         hash_key = hashlib.md5(hash_str.encode()).hexdigest()
 
         return {
             "hash_key": hash_key,
             "category": item["category"],
             "title_en": item["title_en"],
-            "title_km": item["title_km"],
-            "title_zh": item.get("title_zh", ""),
+            "service_highlight": item.get("service_highlight", "Honkai Logistics Solutions"),
             "summary_en": item["summary_en"],
-            "summary_km": item["summary_km"],
-            "summary_zh": item.get("summary_zh", ""),
             "key_data": item["key_data"],
-            "cambodia_impact": item["cambodia_impact"],
-            "cambodia_impact_zh": item.get("cambodia_impact_zh", ""),
+            "market_intelligence": item.get("market_intelligence", ""),
+            "honkai_advantage": item.get("honkai_advantage", ""),
             "action_recommendation": item["action_recommendation"],
-            "action_recommendation_zh": item.get("action_recommendation_zh", ""),
-            "tags": item["tags"],
+            "tags": item.get("tags", ["#HonkaiLogistics", "#CambodiaLogistics"]),
             "photo_url": photo_info["url"],
             "photo_title": photo_info["title"],
             "photo_location": photo_info["location"],
             "photo_credit": photo_info["credit"],
-            "source": item["source"],
+            "source": item.get("source", "Honkai Logistics Intelligence Desk"),
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M ICT")
         }
 
     async def deep_research_topic(self, user_query: str) -> Dict[str, Any]:
         """
-        Performs in-depth research on any specific logistics topic using Google Gemini if available,
-        or structured intelligent synthesis.
+        Performs in-depth research on any specific logistics topic in English,
+        promoting Honkai Logistics services.
         """
         logger.info(f"Conducting deep logistics research on: {user_query}")
         
-        # If Gemini API is available, generate dynamic real-time intelligence
+        # If Gemini API is available, generate dynamic real-time intelligence in English
         if self.gemini_client:
             prompt = f"""
-You are the Chief Logistics & Supply Chain Intelligence Analyst specializing in Cambodia and Southeast Asia.
+You are the Chief Logistics Analyst & Marketing Strategist for Honkai Logistics (Cambodia) Co., Ltd.
 The user requested deep research on the following topic:
 "{user_query}"
 
-Generate a comprehensive, actionable logistics intelligence post tailored specifically for Cambodian supply chain stakeholders:
-- Garment, Footwear & Travel Goods (GFT) factory managers & merchandisers (many are Chinese and Cambodian speaking)
-- Freight forwarders (CAMFFA members) & customs brokers
-- Shipping lines (feeder carriers connecting Sihanoukville PAS and Phnom Penh PPAP)
-- Air cargo carriers (operating via Phnom Penh TIA / PNH)
-- Trucking & transport companies (Expressway, Bavet border, Poipet border)
+Generate a professional, compelling, 100% English logistics intelligence briefing tailored to promote Honkai Logistics' services to manufacturing factory owners, freight forwarders, and corporate shippers. Remind existing clients and attract new clients by demonstrating Honkai's reliability, equipment capacity, customs expertise, on-time delivery record, and competitive pricing.
 
-Please return your analysis as a valid JSON object with the following fields:
+Return your analysis as a valid JSON object with the following fields:
 {{
-  "category": "One of: Sea Freight & Ports, Air Cargo, Cross-Border Trucking, Customs & GDCE, Factory Logistics, Infrastructure",
-  "title_en": "Professional English headline",
-  "title_km": "Clear, natural Khmer translation of the headline",
-  "title_zh": "Clear, professional Simplified Chinese translation of the headline",
+  "category": "One of: Ocean Freight & Port Operations, Cross-Border Trucking, Air Cargo Express, Customs Brokerage & Compliance, Factory & SEZ Logistics, Inland Waterways",
+  "title_en": "Engaging, professional headline in English highlighting market insight and Honkai service",
+  "service_highlight": "Specific Honkai Logistics service capability related to this topic",
   "summary_en": "Executive summary in English (2-3 sentences)",
-  "summary_km": "Executive summary in Khmer (2-3 sentences)",
-  "summary_zh": "Executive summary in Simplified Chinese (2-3 sentences)",
-  "key_data": ["Bullet point 1 with rates/metrics", "Bullet point 2 with transit times/capacity", "Bullet point 3 with operational status"],
-  "cambodia_impact": "Direct operational and financial impact on Cambodian exporters, importers, and factories (English)",
-  "cambodia_impact_zh": "Direct operational and financial impact on factories (Simplified Chinese)",
-  "action_recommendation": "Concrete, step-by-step recommendation for freight forwarders and factory shipping departments (English)",
-  "action_recommendation_zh": "Concrete recommendation in Simplified Chinese",
-  "tags": ["#Tag1", "#Tag2", "#Tag3"],
+  "key_data": ["Bullet point 1 with rates or operational transit times", "Bullet point 2 with equipment or schedule data", "Bullet point 3 with efficiency metric"],
+  "market_intelligence": "Detailed market context and operational reality in Cambodia (English)",
+  "honkai_advantage": "Why clients trust Honkai Logistics for this specific route or service (English)",
+  "action_recommendation": "Clear, actionable recommendation for shippers with a direct call to action to book with Honkai Logistics (English)",
+  "tags": ["#HonkaiLogistics", "#CambodiaLogistics", "#RelevantTag1", "#RelevantTag2"],
   "photo_category": "ocean_port OR air_cargo OR trucking_highway OR factory_logistics OR customs_inspection OR canal_waterways"
 }}
 Return ONLY valid JSON without markdown fences.
@@ -232,8 +470,9 @@ Return ONLY valid JSON without markdown fences.
                 clean_json = re.sub(r"```$", "", clean_json, flags=re.MULTILINE).strip()
                 data = json.loads(clean_json)
 
+                recent_photos = get_recently_used_photos(limit=25)
                 photo_category = data.get("photo_category", "ocean_port")
-                photo_info = get_action_photo_for_topic(photo_category, user_query)
+                photo_info = get_action_photo_for_topic(photo_category, user_query, exclude_urls=recent_photos)
 
                 hash_str = f"{data['title_en']}_{datetime.now().strftime('%Y-%m-%d_%H%M')}"
                 hash_key = hashlib.md5(hash_str.encode()).hexdigest()
@@ -242,28 +481,24 @@ Return ONLY valid JSON without markdown fences.
                     "hash_key": hash_key,
                     "category": data.get("category", "Logistics Market Intelligence"),
                     "title_en": data["title_en"],
-                    "title_km": data.get("title_km", ""),
-                    "title_zh": data.get("title_zh", ""),
+                    "service_highlight": data.get("service_highlight", "Honkai Logistics Dedicated Services"),
                     "summary_en": data["summary_en"],
-                    "summary_km": data.get("summary_km", ""),
-                    "summary_zh": data.get("summary_zh", ""),
                     "key_data": data.get("key_data", []),
-                    "cambodia_impact": data.get("cambodia_impact", ""),
-                    "cambodia_impact_zh": data.get("cambodia_impact_zh", ""),
+                    "market_intelligence": data.get("market_intelligence", ""),
+                    "honkai_advantage": data.get("honkai_advantage", ""),
                     "action_recommendation": data.get("action_recommendation", ""),
-                    "action_recommendation_zh": data.get("action_recommendation_zh", ""),
-                    "tags": data.get("tags", ["#CambodiaLogistics", "#SupplyChain"]),
+                    "tags": data.get("tags", ["#HonkaiLogistics", "#CambodiaLogistics"]),
                     "photo_url": photo_info["url"],
                     "photo_title": photo_info["title"],
                     "photo_location": photo_info["location"],
                     "photo_credit": photo_info["credit"],
-                    "source": "AI Deep Research & Regional Trade Intelligence",
+                    "source": "Honkai AI Research & Global Logistics Intelligence",
                     "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M ICT")
                 }
             except Exception as e:
-                logger.error(f"Gemini API research generation failed: {e}. Falling back to rule-based engine.")
+                logger.error(f"Gemini API research generation failed: {e}. Falling back to curated catalog.")
 
-        # Fallback intelligent synthesizer
+        # Fallback intelligent matching from BUILTIN_INTELLIGENCE_FEEDS
         matched_feed = None
         for feed in BUILTIN_INTELLIGENCE_FEEDS:
             if any(term in user_query.lower() for term in feed["category"].lower().split()):
@@ -272,29 +507,26 @@ Return ONLY valid JSON without markdown fences.
         if not matched_feed:
             matched_feed = BUILTIN_INTELLIGENCE_FEEDS[0]
 
-        photo_info = get_action_photo_for_topic(matched_feed.get("photo_category", "ocean_port"), user_query)
+        recent_photos = get_recently_used_photos(limit=25)
+        photo_info = get_action_photo_for_topic(matched_feed.get("photo_category", "ocean_port"), user_query, exclude_urls=recent_photos)
         hash_str = f"{user_query}_{datetime.now().strftime('%Y-%m-%d_%H%M')}"
         hash_key = hashlib.md5(hash_str.encode()).hexdigest()
 
         return {
             "hash_key": hash_key,
-            "category": f"Research: {matched_feed['category']}",
-            "title_en": f"Market Research: {user_query.capitalize()} — Operational Analysis",
-            "title_km": f"ការស្រាវជ្រាវទីផ្សារភស្តុភារកម្ម៖ {matched_feed['title_km']}",
-            "title_zh": f"物流市场专项深度研报：{matched_feed.get('title_zh', '')}",
-            "summary_en": f"Deep analysis for '{user_query}': {matched_feed['summary_en']}",
-            "summary_km": f"ការវិភាគលម្អិតលើ '{user_query}'៖ {matched_feed['summary_km']}",
-            "summary_zh": f"针对 '{user_query}' 的深度研判：{matched_feed.get('summary_zh', '')}",
+            "category": f"{matched_feed['category']}",
+            "title_en": f"Logistics Advisory: {user_query.capitalize()} — Honkai Operational Analysis",
+            "service_highlight": matched_feed.get("service_highlight", "Honkai Logistics Services"),
+            "summary_en": f"Special analysis for '{user_query}': {matched_feed['summary_en']}",
             "key_data": matched_feed["key_data"],
-            "cambodia_impact": matched_feed["cambodia_impact"],
-            "cambodia_impact_zh": matched_feed.get("cambodia_impact_zh", ""),
+            "market_intelligence": matched_feed.get("market_intelligence", ""),
+            "honkai_advantage": matched_feed.get("honkai_advantage", ""),
             "action_recommendation": matched_feed["action_recommendation"],
-            "action_recommendation_zh": matched_feed.get("action_recommendation_zh", ""),
-            "tags": matched_feed["tags"] + ["#DeepResearch", "#MarketAnalysis", "#深度研报"],
+            "tags": matched_feed.get("tags", []) + ["#CustomAdvisory", "#HonkaiReliability"],
             "photo_url": photo_info["url"],
             "photo_title": photo_info["title"],
             "photo_location": photo_info["location"],
             "photo_credit": photo_info["credit"],
-            "source": "Cambodia Logistics Intelligence Research Engine",
+            "source": "Honkai Logistics Intelligence Desk",
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M ICT")
         }

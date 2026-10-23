@@ -1,16 +1,15 @@
 import asyncio
 import logging
 import sys
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from typing import List
 
-# Reconfigure stdout/stderr for Unicode (Khmer & emojis) on Windows consoles
+# Reconfigure stdout/stderr for Unicode on Windows consoles
 if sys.platform == "win32":
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
     if hasattr(sys.stderr, "reconfigure"):
         sys.stderr.reconfigure(encoding="utf-8")
-
 
 from telegram import Bot, constants
 from config import (
@@ -36,20 +35,23 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Daily slots with 3 distinct intelligence domains:
-# 1. Morning (08:00): Ocean Freight & Port Operations (PAS / PPAP / Feeder)
-# 2. Midday (13:30): Cross-Border Trucking & Highways (Expressway / Bavet / Poipet)
-# 3. Evening (18:00): Air Cargo, Customs & Factory Logistics (TIA / GDCE / GFT)
+# Daily slots configured for 3 distinct market intelligence domains in English:
+# 1. Morning (08:00 ICT): Ocean Freight & Port Operations (PAS / PPAP / Feeder Allocation)
+# 2. Midday (13:30 ICT): Cross-Border Trucking, Expressway Haulage & Borders (Bavet / Poipet)
+# 3. Evening (18:00 ICT): Air Cargo Express, Customs (GDCE), SEZ & Factory Logistics
 DAILY_SLOTS_CONFIG = {
-    SCHEDULE_SLOT_1: {"filter": "sea", "label": "Morning Sea & Port Dispatch"},
-    SCHEDULE_SLOT_2: {"filter": "trucking", "label": "Midday Trucking & Highway Dispatch"},
-    SCHEDULE_SLOT_3: {"filter": "air", "label": "Evening Air Cargo, Factory & Customs Dispatch"}
+    SCHEDULE_SLOT_1: {"filter": "ocean", "label": "Morning Ocean & Port Dispatch"},
+    SCHEDULE_SLOT_2: {"filter": "trucking", "label": "Midday Trucking & Expressway Dispatch"},
+    SCHEDULE_SLOT_3: {"filter": "air", "label": "Evening Air Cargo & Customs Dispatch"}
 }
+
+ICT_TIMEZONE = timezone(timedelta(hours=7))
 
 async def broadcast_market_update(bot: Bot, research_engine: LogisticsResearchEngine, category_filter: str = None):
     """
-    Synthesizes the freshest intelligence briefing and broadcasts it with action photo
-    to configured channel and active subscribers.
+    Synthesizes the freshest intelligence briefing in English, promoting Honkai Logistics services,
+    and broadcasts it with a verified action photo to the configured channel and active subscribers.
+    Deduplicates recipients strictly to prevent sending duplicate posts.
     """
     logger.info(f"Generating scheduled market intelligence briefing (filter: {category_filter})...")
     briefing = await research_engine.get_latest_market_briefing(category_filter=category_filter)
@@ -58,19 +60,26 @@ async def broadcast_market_update(bot: Bot, research_engine: LogisticsResearchEn
     photo_url = briefing["photo_url"]
 
     # Target recipients: channel + active subscriber chats
+    # Normalize to int (or str) so that string channel IDs and integer chat IDs merge in the set
     target_recipients = set()
     if TELEGRAM_CHANNEL_ID:
-        target_recipients.add(TELEGRAM_CHANNEL_ID)
+        try:
+            target_recipients.add(int(TELEGRAM_CHANNEL_ID))
+        except (ValueError, TypeError):
+            target_recipients.add(str(TELEGRAM_CHANNEL_ID))
 
     subscribers = get_subscribers(only_active=True)
     for sub in subscribers:
-        target_recipients.add(sub["chat_id"])
+        try:
+            target_recipients.add(int(sub["chat_id"]))
+        except (ValueError, TypeError):
+            target_recipients.add(str(sub["chat_id"]))
 
     if not target_recipients:
         logger.warning("No subscribers or TELEGRAM_CHANNEL_ID configured for broadcast.")
         return
 
-    logger.info(f"Broadcasting '{briefing['title_en']}' to {len(target_recipients)} destinations...")
+    logger.info(f"Broadcasting '{briefing['title_en']}' to {len(target_recipients)} distinct destination(s)...")
     success_count = 0
 
     for dest in target_recipients:
@@ -84,7 +93,7 @@ async def broadcast_market_update(bot: Bot, research_engine: LogisticsResearchEn
                 )
             else:
                 short_header = (
-                    f"🇰🇭 <b>HONKAI CAMBODIA LOGISTICS DISPATCH</b>\n"
+                    f"🇰🇭 <b>HONKAI LOGISTICS | CAMBODIA FREIGHT DISPATCH</b>\n"
                     f"📌 <b>{briefing.get('category', 'Market Update')}</b>\n"
                     f"📸 <i>{briefing.get('photo_title', '')} ({briefing.get('photo_location', '')})</i>"
                 )
@@ -103,15 +112,13 @@ async def broadcast_market_update(bot: Bot, research_engine: LogisticsResearchEn
             success_count += 1
             await asyncio.sleep(0.5)
         except Exception as e:
-            logger.error(f"Failed to broadcast to {dest}: {e}")
-            # Fallback to pure text message
+            logger.error(f"Failed to broadcast photo to {dest}: {e}")
+            # Fallback to pure text message if photo fails
             try:
-                await bot.send_message(chat_id=dest, text=caption, parse_mode=constants.ParseMode.HTML)
+                await bot.send_message(chat_id=dest, text=caption, parse_mode=constants.ParseMode.HTML, disable_web_page_preview=True)
                 success_count += 1
             except Exception as e2:
                 logger.error(f"Fallback text also failed for {dest}: {e2}")
-        except Exception as e:
-            logger.error(f"Failed to broadcast to {dest}: {e}")
 
     logger.info(f"Broadcast complete! Successfully sent to {success_count}/{len(target_recipients)} destinations.")
 
@@ -143,12 +150,10 @@ async def run_scheduler_loop():
     logger.info(f"• Slot 3 ({SCHEDULE_SLOT_3} ICT): Air Cargo & Customs/Factory Logistics")
 
     last_broadcast_date = ""
-    from datetime import timezone, timedelta
-    ict_tz = timezone(timedelta(hours=7))
 
     while True:
         try:
-            now_ict = datetime.now(ict_tz)
+            now_ict = datetime.now(ICT_TIMEZONE)
             now_str = now_ict.strftime("%H:%M")
             today_str = now_ict.strftime("%Y-%m-%d")
 
