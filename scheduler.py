@@ -93,7 +93,7 @@ async def broadcast_market_update(bot: Bot, research_engine: LogisticsResearchEn
                 )
             else:
                 short_header = (
-                    f"🇰🇭 <b>HONKAI LOGISTICS | CAMBODIA FREIGHT DISPATCH</b>\n"
+                    f"🇰🇭 <b>ព័ត៌មានភស្តុភារកម្មកម្ពុជា | CAMBODIA LOGISTICS INTEL</b>\n"
                     f"📌 <b>{briefing.get('category', 'Market Update')}</b>\n"
                     f"📸 <i>{briefing.get('photo_title', '')} ({briefing.get('photo_location', '')})</i>"
                 )

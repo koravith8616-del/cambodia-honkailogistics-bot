@@ -1,24 +1,28 @@
 import html
 from typing import Dict, List, Any
 
-def format_intelligence_post(item: Dict[str, Any], language_mode: str = "en") -> str:
+def format_intelligence_post(item: Dict[str, Any], language_mode: str = "bilingual") -> str:
     """
-    Formats an intelligence report into a high-impact, professional Telegram HTML message in English.
-    Specifically designed to promote Honkai Logistics services, reassure existing customers,
-    and attract new clients by demonstrating operational excellence and reliability.
+    Formats a Cambodia logistics market intelligence report into an executive Telegram HTML message.
+    Strictly bilingual: Khmer summary alongside English summary, focused entirely on helpful
+    operational intelligence for Freight Forwarders, Shipping Lines, and Logistics Operators in Cambodia.
     """
-    category = html.escape(item.get("category", "Market Logistics"))
+    category = html.escape(item.get("category", "Cambodia Logistics"))
+    title_km = html.escape(item.get("title_km", ""))
     title_en = html.escape(item.get("title_en", ""))
-    service_highlight = html.escape(item.get("service_highlight", "Honkai Logistics Dedicated Services"))
+    summary_km = html.escape(item.get("summary_km", ""))
     summary_en = html.escape(item.get("summary_en", ""))
-    market_intelligence = html.escape(item.get("market_intelligence", ""))
-    honkai_advantage = html.escape(item.get("honkai_advantage", ""))
-    action_rec = html.escape(item.get("action_recommendation", ""))
+    
+    impact_km = html.escape(item.get("cambodia_impact", item.get("impact_km", "")))
+    impact_en = html.escape(item.get("cambodia_impact_en", item.get("impact_en", "")))
+    
+    action_km = html.escape(item.get("action_recommendation", item.get("action_km", "")))
+    action_en = html.escape(item.get("action_recommendation_en", item.get("action_en", "")))
     
     photo_title = html.escape(item.get("photo_title", ""))
     photo_loc = html.escape(item.get("photo_location", ""))
     photo_credit = html.escape(item.get("photo_credit", ""))
-    source = html.escape(item.get("source", "Honkai Logistics Intelligence Desk"))
+    source = html.escape(item.get("source", "Cambodia Logistics Intelligence"))
     timestamp = html.escape(item.get("timestamp", ""))
 
     tags = " ".join([f"<b>{html.escape(t)}</b>" for t in item.get("tags", [])])
@@ -26,58 +30,63 @@ def format_intelligence_post(item: Dict[str, Any], language_mode: str = "en") ->
     lines = []
     
     # 1. Header Banner
-    lines.append("🇰🇭 <b>HONKAI LOGISTICS | CAMBODIA MARKET DISPATCH</b>")
-    lines.append(f"⚡ <b>Executive Freight Briefing</b> | 📌 <b>{category}</b>")
+    lines.append("🇰🇭 <b>ព័ត៌មានទីផ្សារភស្តុភារកម្មកម្ពុជា | CAMBODIA LOGISTICS INTEL</b>")
+    lines.append(f"⚡ <b>Freight Forwarder & Carrier Advisory</b> | 📌 <b>{category}</b>")
     lines.append(f"🕒 <i>{timestamp}</i>")
     lines.append("────────────────────────────")
 
-    # 2. Main English Headline
+    # 2. Main Bilingual Headlines (Khmer first, followed by English)
+    if title_km:
+        lines.append(f"🇰🇭 <b>{title_km}</b>")
     if title_en:
-        lines.append(f"🚢 <b>{title_en}</b>")
-        lines.append("")
+        lines.append(f"🇬🇧 <b>{title_en}</b>")
+    lines.append("")
 
     # 3. Action Photo Operational Context
     if photo_title:
-        lines.append(f"📸 <b>Verified Operations:</b> <i>{photo_title}</i>")
+        lines.append(f"📸 <b>ទិដ្ឋភាពជាក់ស្តែង / Operations:</b> <i>{photo_title}</i>")
         if photo_loc:
             lines.append(f"📍 <i>{photo_loc}</i>")
         lines.append("")
 
-    # 4. Market Summary
+    # 4. Bilingual Operational Executive Summary
+    lines.append("📢 <b>សេចក្តីសង្ខេបប្រតិបត្តិការ / EXECUTIVE SUMMARY:</b>")
+    if summary_km:
+        lines.append(f"🇰🇭 • {summary_km}")
     if summary_en:
-        lines.append("📢 <b>MARKET OVERVIEW & OPERATIONAL REALITY:</b>")
-        lines.append(f"• {summary_en}")
-        if market_intelligence:
-            lines.append(f"• <i>{market_intelligence}</i>")
-        lines.append("")
+        lines.append(f"🇬🇧 • {summary_en}")
+    lines.append("")
 
     # 5. Key Operational Data Points
     key_data = item.get("key_data", [])
     if key_data:
-        lines.append("📊 <b>KEY METRICS & ROUTE BENCHMARKS:</b>")
+        lines.append("📊 <b>សូចនាករសំខាន់ៗ / KEY OPERATIONAL METRICS:</b>")
         for dp in key_data:
             lines.append(f"  ▪️ <code>{html.escape(str(dp))}</code>")
         lines.append("")
 
-    # 6. Honkai Logistics Advantage & Service Spotlight (Promoting Trust & Quality)
-    if honkai_advantage:
-        lines.append("🛡️ <b>THE HONKAI LOGISTICS ADVANTAGE:</b>")
-        lines.append(f"⭐ <b>{service_highlight}</b>")
-        lines.append(f"{honkai_advantage}")
+    # 6. Supply Chain & Trade Impact
+    if impact_km or impact_en:
+        lines.append("🏭 <b>ផលប៉ះពាល់ខ្សែច្រវាក់ផ្គត់ផ្គង់ / SUPPLY CHAIN IMPACT:</b>")
+        if impact_km:
+            lines.append(f"🇰🇭 {impact_km}")
+        if impact_en:
+            lines.append(f"🇬🇧 {impact_en}")
         lines.append("")
 
-    # 7. Action Recommendation & Client Call to Action
-    if action_rec:
-        lines.append("💡 <b>EXECUTIVE RECOMMENDATION & NEXT STEPS:</b>")
-        lines.append(f"🎯 {action_rec}")
+    # 7. Forwarder & Shipper Action Plan
+    if action_km or action_en:
+        lines.append("💡 <b>អនុសាសន៍សម្រាប់ក្រុមហ៊ុនដឹកជញ្ជូន / FORWARDER ACTION PLAN:</b>")
+        if action_km:
+            lines.append(f"🇰🇭 🎯 {action_km}")
+        if action_en:
+            lines.append(f"🇬🇧 🎯 {action_en}")
         lines.append("")
 
-    # 8. Footer & Trust-Building Company Callout
+    # 8. Footer & Authoritative Source
     lines.append("────────────────────────────")
-    lines.append("🤝 <b>HONKAI LOGISTICS (CAMBODIA) CO., LTD.</b>")
-    lines.append("🚀 <i>Your Reliable Partner for Ocean, Air, Cross-Border Trucking & Customs</i>")
-    lines.append("📞 <b>Inquiries & Bookings:</b> <i>Contact our 24/7 Logistics Desk</i>")
-    lines.append(f"🏛️ <b>Verified Source:</b> <i>{source}</i>")
+    lines.append(f"🏛️ <b>ប្រភពផ្ទៀងផ្ទាត់ / Verified Source:</b> <i>{source}</i>")
+    lines.append("💬 <i>ព័ត៌មានទាន់ហេតុការណ៍សម្រាប់សមាគមភស្តុភារកម្ម (CAMFFA) ភ្នាក់ងារនាវាចរណ៍ និងក្រុមហ៊ុនដឹកជញ្ជូននៅកម្ពុជា។</i>")
     if tags:
         lines.append(tags)
 
@@ -85,10 +94,10 @@ def format_intelligence_post(item: Dict[str, Any], language_mode: str = "en") ->
 
 
 def format_rate_index(indicators: List[Dict[str, Any]]) -> str:
-    """Formats freight rate indices and fuel costs into an executive English table."""
+    """Formats freight rate indices and fuel costs into an executive bilingual table."""
     lines = []
-    lines.append("📈 <b>HONKAI LOGISTICS | CAMBODIA FREIGHT RATE BENCHMARK</b>")
-    lines.append("📊 <i>Live Spot Rates, Feeder Tariffs & Commercial Energy Index</i>")
+    lines.append("📈 <b>សន្ទស្សន៍តម្លៃដឹកជញ្ជូនកម្ពុជា | CAMBODIA FREIGHT RATE INDEX</b>")
+    lines.append("📊 <i>Live Spot Rates, Feeder Tariffs & Commercial Diesel Benchmark</i>")
     lines.append("────────────────────────────")
 
     categories = {}
@@ -97,12 +106,12 @@ def format_rate_index(indicators: List[Dict[str, Any]]) -> str:
         categories.setdefault(cat, []).append(ind)
 
     cat_icons = {
-        "Sea Freight": "🚢 <b>OCEAN CONTAINER FREIGHT (FCL / LCL)</b>",
-        "Feeder / Sea": "⚓ <b>FEEDER SERVICES (PAS & REGIONAL HUBS)</b>",
-        "Barge / Feeder": "🛳️ <b>INLAND WATERWAY & MEKONG BARGE</b>",
-        "Air Freight": "✈️ <b>AIR CARGO EXPRESS (PNH / TIA)</b>",
-        "Trucking": "🚛 <b>DOMESTIC & CROSS-BORDER TRUCKING</b>",
-        "Fuel / Energy": "⛽ <b>COMMERCIAL DIESEL & FUEL SURCHARGE</b>"
+        "Sea Freight": "🚢 <b>ថ្លៃដឹកជញ្ជូនតាមសមុទ្រ (Ocean Container FCL / LCL)</b>",
+        "Feeder / Sea": "⚓ <b>កម្រៃសេវាកប៉ាល់ចំណុះ (Feeder to Hubs)</b>",
+        "Barge / Feeder": "🛳️ <b>ការដឹកជញ្ជូនតាមសាឡង់ទន្លេ (Mekong River Barge)</b>",
+        "Air Freight": "✈️ <b>ថ្លៃដឹកជញ្ជូនតាមផ្លូវអាកាស (Air Cargo Express)</b>",
+        "Trucking": "🚛 <b>ថ្លៃរថយន្តកុងតឺន័រ និងដឹកឆ្លងដែន (Road Freight & Border)</b>",
+        "Fuel / Energy": "⛽ <b>តម្លៃប្រេងម៉ាស៊ូតពាណិជ្ជកម្ម (Commercial Diesel Benchmark)</b>"
     }
 
     for cat, items in categories.items():
@@ -119,103 +128,103 @@ def format_rate_index(indicators: List[Dict[str, Any]]) -> str:
             elif pct < 0:
                 trend_icon = f"🔻 {pct:.1f}%"
             else:
-                trend_icon = "🟢 Stable"
+                trend_icon = "🟢 ថេរ (Stable)"
 
             lines.append(f"  ▪️ <b>{name}</b>\n     ↳ Rate: <code>{curr}</code> ({trend_icon})")
 
     lines.append("\n────────────────────────────")
-    lines.append("💡 <i>Honkai Logistics offers secured space contracts and volume discounts for regular shippers.</i>")
-    lines.append("📞 Contact Honkai Logistics for customized spot or quarterly contract rate quotes.")
-    lines.append("#HonkaiLogistics #FreightRates #OceanFreight #AirCargo #CambodiaSupplyChain")
+    lines.append("💡 <i>ប្រភព៖ CAMFFA, តារាងតម្លៃកំពង់ផែស្វយ័តក្រុងព្រះសីហនុ (PAS), ភ្នំពេញ (PPAP) និងក្រសួងពាណិជ្ជកម្ម។</i>")
+    lines.append("#CambodiaLogistics #FreightRates #CAMFFA #OceanFreight #AirCargo #TruckingRates")
     return "\n".join(lines)
 
 
 def format_port_status() -> str:
-    """Formats operational status for Sihanoukville (PAS) and Phnom Penh (PPAP) in clean English."""
+    """Formats operational status for Sihanoukville (PAS) and Phnom Penh (PPAP) in Khmer and English."""
     return """
-⚓ <b>HONKAI LOGISTICS | CAMBODIA PORTS OPERATIONAL DASHBOARD</b>
-🚢 <i>Live Operational Intelligence: Sihanoukville (PAS) & Phnom Penh (PPAP)</i>
+⚓ <b>ស្ថានភាពប្រតិបត្តិការកំពង់ផែកម្ពុជា | CAMBODIA PORTS STATUS</b>
+🚢 <i>Sihanoukville Autonomous Port (PAS) & Phnom Penh Autonomous Port (PPAP)</i>
 ────────────────────────────
 
-🚢 <b>1. Sihanoukville Autonomous Port (PAS) Deep-Water Terminal:</b>
-• <b>Berth Waiting Time:</b> 🟢 0.5 - 1.0 Day (Fluid Berthing)
-• <b>Vessel Turnaround:</b> ⏱️ 12 - 16 Hours per feeder vessel
-• <b>Yard Utilization:</b> 📦 76% (Normal fluid capacity)
-• <b>Gantry Cranes:</b> ⚙️ 5 STS Cranes + 2 MHC Active
-• <b>Deep-Water Expansion:</b> 🚧 Phase 1 (14.5m draft) on schedule for completion
+🚢 <b>1. កំពង់ផែស្វយ័តក្រុងព្រះសីហនុ / Sihanoukville Autonomous Port (PAS):</b>
+• <b>Berth Waiting Time:</b> 🟢 0.5 - 1.0 Day / រង់ចាំចូលចត ០.៥ - ១.០ ថ្ងៃ (Normal Fluid)
+• <b>Vessel Turnaround:</b> ⏱️ 12 - 16 Hours / រយៈពេលលើកដាក់ ១២ - ១៦ ម៉ោងក្នុងមួយកប៉ាល់
+• <b>Yard Utilization:</b> 📦 76% Capacity / ទីលានដំណើរការ ៧៦% នៃសមត្ថភាពផ្ទុក
+• <b>Gantry Cranes:</b> ⚙️ 5 STS Cranes + 2 MHC Active / ស្ទូចកុងតឺន័រដំណើរការពេញលេញ
+• <b>Deep-Water Expansion:</b> 🚧 ដំណាក់កាលទី១ (ជម្រៅទឹក ១៤.៥ ម៉ែត្រ) កំពុងសាងសង់តាមផែនការ
 • <b>Direct Feeder Loops:</b> Singapore, Port Klang, Cai Mep, Bangkok, Shekou
 
-🛳️ <b>2. Phnom Penh Autonomous Port (PPAP LM17) River Terminal:</b>
-• <b>Barge Berthing:</b> 🟢 0 Hours Waiting (Immediate Berthing)
-• <b>Transit to Cai Mep Hub:</b> ⏱️ 24 - 30 Hours downriver
-• <b>Reefer Plugs Available:</b> 🔌 95% Active & Monitored
-• <b>Customs Green Channel:</b> ✅ Fast-track paperless clearance via CamDX
+🛳️ <b>2. កំពង់ផែស្វយ័តភ្នំពេញ / Phnom Penh Autonomous Port (PPAP LM17):</b>
+• <b>Barge Berthing:</b> 🟢 0 Hours Waiting / ចូលចតភ្លាមៗ (Immediate Berthing)
+• <b>Transit to Cai Mep Hub:</b> ⏱️ 24 - 30 Hours downriver / ២៤-៣០ ម៉ោង តាមដងទន្លេមេគង្គ
+• <b>Reefer Plugs Available:</b> 🔌 95% Active / កន្លែងដោតភ្លើងកុងតឺន័រត្រជាក់មានគ្រប់គ្រាន់
+• <b>Customs Green Channel:</b> ✅ 88% Fast-Track via CamDX / បញ្ចេញទំនិញឆាប់រហ័ស
 
 ────────────────────────────
-💡 <b>THE HONKAI ADVANTAGE:</b>
-<i>Routing heavy 40ft containers via Honkai's PPAP LM17 river barge saves $80-$120 per box compared to road transport while guaranteeing seamless transshipment onto US/EU mother vessels.</i>
+💡 <b>FORWARDER PRO TIP / គន្លឹះសម្រាប់ក្រុមហ៊ុនបញ្ជូនទំនិញ:</b>
+<i>ដឹកជញ្ជូនទំនិញកុងតឺន័រធ្ងន់ (40ft Heavy) តាមសាឡង់ PPAP LM17 ចំណេញចន្លោះពី ៨០ ទៅ ១២០ ដុល្លារក្នុងមួយទូ ធៀបនឹងការដឹកតាមផ្លូវគោក ព្រមទាំងមិនបារម្ភរឿងកំណត់ទម្ងន់លើផ្លូវជាតិឡើយ!</i>
 
-📞 Contact Honkai Logistics for guaranteed port allocations and express feeder bookings.
-#HonkaiLogistics #PAS #PPAP #CambodiaPorts #MaritimeLogistics
+#PAS #PPAP #CambodiaPorts #MaritimeLogistics #កំពង់ផែស្វយ័ត #CAMFFA
 """
 
 
 def format_customs_guide() -> str:
-    """Formats GDCE Customs compliance and paperwork guidance in clean English."""
+    """Formats GDCE Customs compliance and paperwork guidance in Khmer and English."""
     return """
-📋 <b>HONKAI LOGISTICS | CAMBODIA CUSTOMS (GDCE) CLEARANCE GUIDE</b>
-🏛️ <i>Regulatory Compliance, ASYCUDA Pre-Filing & Rules of Origin Advisory</i>
+📋 <b>ការណែនាំនីតិវិធីគយ និងច្បាប់ពាណិជ្ជកម្ម | GDCE CUSTOMS COMPLIANCE GUIDE</b>
+🏛️ <i>ASYCUDA World Pre-Filing, CamDX Integration & Rules of Origin Advisory</i>
 ────────────────────────────
 
-🏛️ <b>General Department of Customs and Excise (GDCE) Best Practices:</b>
+🏛️ <b>អគ្គនាយកដ្ឋានគយ និងរដ្ឋាករកម្ពុជា (GDCE):</b>
 • <b>ASYCUDA World Single Window:</b> Online manifest filing 24h to 48h prior to vessel berthing.
-• <b>CamDX Digital Integration:</b> Automated electronic import/export licenses and permits.
+  ↳ <i>ដាក់លិខិតឆ្លងកាត់ និងបញ្ជីទំនិញតាមប្រព័ន្ធអេឡិចត្រូនិចមុន ២៤ ទៅ ៤៨ ម៉ោង មុនកប៉ាល់ចូលចត។</i>
+• <b>CamDX Digital Integration:</b> Automated electronic import/export licenses and phytosanitary permits.
+  ↳ <i>ការតភ្ជាប់អាជ្ញាប័ណ្ណ និងលិខិតអនុញ្ញាតបែបឌីជីថលកាត់បន្ថយពេលវេលាត្រួតពិនិត្យ។</i>
 • <b>Pre-Arrival Declaration:</b> Enables 92%+ Green Lane automated release without physical inspection.
+  ↳ <i>ការប្រកាសព័ត៌មានមុនពេលទំនិញមកដល់ ជួយឱ្យទំនិញឆ្លងកាត់ផ្លូវបៃតង (Green Channel) លើសពី ៩២%។</i>
 
-📜 <b>Preferential Trade Agreements & Tariff Optimization:</b>
+📜 <b>វិញ្ញាបនបត្រដើមកំណើតទំនិញ និងការលើកលែងពន្ធ (Rules of Origin):</b>
 1. <b>RCEP (Regional Comprehensive Economic Partnership):</b>
-   ▫️ 0% duty on raw fabrics, yarns, dyes, and manufacturing machinery from China & ASEAN.
-2. <b>ASEAN Trade in Goods Agreement (ATIGA - Form D):</b>
+   ▫️ 0% duty on raw textiles, yarns, accessories, and manufacturing machinery from China & ASEAN.
+   ▫️ <i>ពន្ធនាំចូល ០% លើវត្ថុធាតុដើមវាយនភណ្ឌ និងគ្រឿងម៉ាស៊ីនពីរដ្ឋជាសមាជិក RCEP។</i>
+2. <b>ATIGA (Form D):</b>
    ▫️ Duty-free cross-border land transit via Bavet (Vietnam) & Poipet (Thailand).
-3. <b>EU / UK Schemes:</b>
+   ▫️ <i>ការលើកលែងពន្ធសម្រាប់ការដឹកជញ្ជូនឆ្លងដែនក្នុងតំបន់អាស៊ាន។</i>
+3. <b>EU / UK GSP Schemes:</b>
    ▫️ Registered Exporter (REX) system for duty-free garment & footwear exports.
+   ▫️ <i>ប្រព័ន្ធ REX សម្រាប់ការនាំចេញសម្លៀកបំពាក់ និងស្បែកជើងដោយរួចពន្ធ។</i>
 
-⚠️ <b>COMPLIANCE PROTECTION:</b>
-• Always verify HS Codes prior to factory stuffing to maintain Green Channel status and avoid demurrage costs.
+⚠️ <b>COMPLIANCE ALERT / បម្រាមគយសំខាន់:</b>
+• ផ្ទៀងផ្ទាត់លេខកូដទំនិញ (HS Code) និងតម្លៃប្រកាសឱ្យបានត្រឹមត្រូវ មុនពេលផ្ទុកកុងតឺន័រ ដើម្បីចៀសវាងការធ្លាក់ចូលផ្លូវក្រហម (Red Lane) ដែលនាំឱ្យខាតបង់ថ្លៃស្តុក (Demurrage & Detention) នៅកំពង់ផែ!
 
 ────────────────────────────
-🛡️ <b>WHY CHOOSE HONKAI CUSTOMS BROKERAGE?</b>
-<i>Our in-house licensed customs brokers manage pre-audits, electronic filings, and on-site port coordination, ensuring 100% compliant, zero-demurrage clearance for your cargo.</i>
-
-#HonkaiLogistics #CustomsBrokerage #GDCE #ASYCUDA #CamDX #RCEP #TradeCompliance
+#CustomsGDCE #ASYCUDA #CamDX #RCEP #TradeCompliance #គយនិងរដ្ឋាករ #CAMFFA
 """
 
 
 def format_factory_supply_chain() -> str:
-    """Formats Factory & Manufacturing logistics intelligence in clean English."""
+    """Formats Factory & Manufacturing logistics intelligence in Khmer and English."""
     return """
-🏭 <b>HONKAI LOGISTICS | CAMBODIA INDUSTRIAL & FACTORY SUPPLY CHAIN</b>
-📦 <i>Garment, Footwear, Electronics & Special Economic Zone (SEZ) Solutions</i>
+🏭 <b>ខ្សែច្រវាក់ផ្គត់ផ្គង់រោងចក្រ និងតំបន់សេដ្ឋកិច្ចពិសេស | FACTORY & SEZ SUPPLY CHAIN</b>
+📦 <i>Garment, Footwear, Travel Goods (GFT) & Industrial Logistics</i>
 ────────────────────────────
 
-📦 <b>1. Inbound Raw Materials & Component Staging:</b>
-• <b>Textile & Fabric Supply:</b> Steady weekly arrivals from Shanghai, Ningbo, and Guangzhou.
+📦 <b>1. វត្ថុធាតុដើមនាំចូល / Inbound Raw Materials & Staging:</b>
+• <b>Textile & Fabric Supply:</b> Steady weekly arrivals from Ningbo, Shanghai, and Guangzhou.
 • <b>Transit Timelines:</b> 7-9 days ocean feeder to PAS; 3 days cross-border road from Vietnam.
-• <b>Free Demurrage Packages:</b> Up to 14-21 days detention free-time for contracted Honkai clients.
+• <b>Free Demurrage Packages:</b> 14-21 days detention free-time recommended for dry port transfer.
+• <i>ការផ្ទេរកុងតឺន័រពីកំពង់ផែទៅកាន់ឃ្លាំងស្តុក (Dry Port ICD) ក្នុងរយៈពេល ៤៨ ម៉ោង កាត់បន្ថយថ្លៃស្តុកលើសកាលកំណត់។</i>
 
-📦 <b>2. Outbound Finished Goods & Retail Exports:</b>
-• <b>40ft HQ Equipment:</b> Guaranteed pristine container equipment stock at Phnom Penh depots.
+📦 <b>2. ការនាំចេញទំនិញសម្រេច / Outbound Finished Goods Exports:</b>
+• <b>40ft HQ Availability:</b> Healthy equipment stock at Teng Lay, Olair, and So Ngoun dry ports.
 • <b>GOH Capabilities:</b> Specialized Garment on Hanger installation for wrinkle-free retail delivery.
-• <b>Expressway Haulage:</b> Guaranteed 2.5-hour transit from Phnom Penh factories to PAS port gate.
+• <b>Expressway Haulage:</b> 2h 15m transit from Phnom Penh industrial parks to PAS port gate.
+• <i>ការដឹកជញ្ជូនតាមផ្លូវល្បឿនលឿនធានាការទៅដល់ទាន់ពេលវេលាកាត់បញ្ជី (CY Cut-Off) ចុងសប្តាហ៍។</i>
 
-📍 <b>Key SEZ Logistics Service Corridors:</b>
-• <b>Royal Group Phnom Penh SEZ:</b> On-site bonded warehousing, vendor-managed inventory (VMI).
-• <b>Manhattan & Tai Seng SEZs (Bavet):</b> Daily bonded cross-border shuttles to Vietnam deep-sea ports.
-• <b>Sihanoukville SEZ (SSEZ):</b> Immediate port proximity for heavy container loading.
+📍 <b>ច្រករបៀងតំបន់សេដ្ឋកិច្ចពិសេសសំខាន់ៗ / Key SEZ Corridors:</b>
+• <b>Royal Group Phnom Penh SEZ:</b> On-site customs inspection & bonded logistics warehousing.
+• <b>Manhattan & Tai Seng SEZs (Bavet):</b> Daily bonded shuttles to Cat Lai & Cai Mep deep-sea ports.
+• <b>Sihanoukville SEZ (SSEZ):</b> Immediate proximity to PAS deep-water port terminal.
 
 ────────────────────────────
-🤝 <b>PARTNER WITH HONKAI LOGISTICS:</b>
-<i>From raw material import to global retail delivery, Honkai Logistics provides end-to-end supply chain reliability, live GPS tracking, and dedicated corporate account management.</i>
-
-#HonkaiLogistics #FactoryLogistics #GarmentCambodia #GFT #SEZ #SupplyChainSolutions
+#FactoryLogistics #GarmentCambodia #GFT #SEZ #SupplyChain #រោងចក្រកាត់ដេរ #CAMFFA
 """

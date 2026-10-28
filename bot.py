@@ -63,26 +63,25 @@ research_engine = LogisticsResearchEngine()
 
 
 def get_main_keyboard() -> InlineKeyboardMarkup:
-    """Builds interactive inline keyboard with executive icons and English labels."""
+    """Builds interactive inline keyboard with executive icons and bilingual labels (Khmer + English)."""
     keyboard = [
         [
-            InlineKeyboardButton("🚨 Latest Intelligence & Service Briefing", callback_data="btn_latest"),
+            InlineKeyboardButton("🚨 ព័ត៌មានទីផ្សារចុងក្រោយ / Latest Intelligence 🇰🇭🇬🇧", callback_data="btn_latest"),
         ],
         [
-            InlineKeyboardButton("📈 Freight Rate Benchmarks", callback_data="btn_rates"),
-            InlineKeyboardButton("⚓ Sea Ports (PAS & PPAP)", callback_data="btn_ports")
+            InlineKeyboardButton("📈 តម្លៃដឹកជញ្ជូន / Rate Index", callback_data="btn_rates"),
+            InlineKeyboardButton("⚓ កំពង់ផែ / Sea Ports (PAS & PPAP)", callback_data="btn_ports")
         ],
         [
-            InlineKeyboardButton("✈️ Air Cargo Express (PNH/TIA)", callback_data="btn_aircargo"),
-            InlineKeyboardButton("🚛 Cross-Border Trucking & Highway", callback_data="btn_trucking")
+            InlineKeyboardButton("✈️ ផ្លូវអាកាស / Air Cargo (PNH/TIA)", callback_data="btn_aircargo"),
+            InlineKeyboardButton("🚛 ផ្លូវគោក & ព្រំដែន / Trucking & Border", callback_data="btn_trucking")
         ],
         [
-            InlineKeyboardButton("🏭 Factory & SEZ Supply Chain", callback_data="btn_factories"),
-            InlineKeyboardButton("📋 GDCE Customs & Trade Advisory", callback_data="btn_customs")
+            InlineKeyboardButton("🏭 រោងចក្រ & តំបន់សេដ្ឋកិច្ច / Factory & SEZ", callback_data="btn_factories"),
+            InlineKeyboardButton("📋 គយ & ច្បាប់ / Customs (GDCE)", callback_data="btn_customs")
         ],
         [
-            InlineKeyboardButton("🔔 Daily Intelligence Alerts (3x/Day)", callback_data="btn_subscribe"),
-            InlineKeyboardButton("📞 Contact Honkai Logistics Desk", callback_data="btn_contact")
+            InlineKeyboardButton("🔔 ទទួលព័ត៌មានប្រចាំថ្ងៃ / 3x Daily Alerts", callback_data="btn_subscribe")
         ]
     ]
     return InlineKeyboardMarkup(keyboard)
@@ -93,7 +92,7 @@ def get_main_keyboard() -> InlineKeyboardMarkup:
 # ==============================================================================
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Handles /start command with interactive welcome and role selection."""
+    """Handles /start command with interactive welcome for Freight Forwarders & Logistics."""
     user = update.effective_user
     chat = update.effective_chat
     
@@ -107,21 +106,23 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         language=DEFAULT_LANGUAGE
     )
 
-    name = user.first_name if user else "Valued Client"
+    name = user.first_name if user else "Logistics Professional"
     welcome_text = (
-        f"🌟 <b>HONKAI LOGISTICS | CAMBODIA MARKET INTELLIGENCE</b>\n"
-        f"⚡ <i>Official Supply Chain Intelligence & Freight Operations Platform</i>\n"
+        f"🌟 <b>ព័ត៌មានទីផ្សារភស្តុភារកម្មកម្ពុជា | CAMBODIA LOGISTICS INTEL</b>\n"
+        f"⚡ <i>Dedicated Market Intelligence for Freight Forwarders, Carriers & Shippers</i>\n"
         f"────────────────────────────\n\n"
-        f"👋 Welcome <b>{name}</b>! You have direct access to verified logistics intelligence for Cambodia, powered by <b>Honkai Logistics (Cambodia) Co., Ltd.</b>\n\n"
-        f"🛡️ <b>Why Shippers Trust Honkai Logistics:</b>\n"
-        f"• 🚢 <b>Guaranteed Ocean Carrier Space:</b> Fixed allocations via Sihanoukville (PAS) and Cai Mep feeder connections.\n"
-        f"• 🚛 <b>Dedicated Trucking Fleet:</b> 2.5h Expressway haulage, GPS live tracking, and bonded cross-border shuttles.\n"
-        f"• ✈️ <b>Air Cargo Express:</b> Blocked space agreements for time-critical fashion, footwear, and sample shipments.\n"
-        f"• 📋 <b>GDCE Customs Brokerage:</b> ASYCUDA World & CamDX Green Lane pre-clearance with zero demurrage focus.\n"
-        f"• 🏭 <b>SEZ & Bonded Warehousing:</b> Royal Group PPSEZ, Manhattan SEZ, and Sihanoukville dry ports.\n\n"
-        f"💎 <b>Daily Scheduled Dispatches (3x Daily at 08:00, 13:30, 18:00 ICT):</b>\n"
-        f"Get actionable market updates and freight benchmarks with verified operations photos.\n\n"
-        f"<i>👇 Select an option below for instant freight data and service inquiries:</i>"
+        f"👋 សូមស្វាគមន៍ / Welcome <b>{name}</b>! អ្នកទទួលបានការតភ្ជាប់ដោយផ្ទាល់ទៅកាន់ប្រព័ន្ធព័ត៌មានភស្តុភារកម្មកម្ពុជាផ្លូវការ (ផ្ទៀងផ្ទាត់ជាក់ស្តែង)។\n\n"
+        f"🛡️ <b>ខ្លឹមសារសំខាន់ៗសម្រាប់ក្រុមហ៊ុនដឹកជញ្ជូន (Freight Forwarders):</b>\n"
+        f"• 🚢 <b>កំពង់ផែសមុទ្រ (PAS & PPAP):</b> ស្ថានភាពចូលចត រយៈពេលលើកដាក់ និងកាលវិភាគកប៉ាល់ចំណុះ\n"
+        f"• 🚛 <b>ផ្លូវល្បឿនលឿន & ច្រកព្រំដែន:</b> ស្ថានភាពចរាចរណ៍រថយន្តកុងតឺន័រ និងការត្រួតពិនិត្យនៅបាវិត/ប៉ោយប៉ែត\n"
+        f"• ✈️ <b>ផ្លូវអាកាស (Air Cargo PNH/TIA):</b> សមត្ថភាពដឹកជញ្ជូនទំនិញ ជើងហោះហើរ និងថ្លៃដឹកជញ្ជូនគំរូ\n"
+        f"• 📋 <b>នីតិវិធីគយ (GDCE):</b> ASYCUDA World, CamDX, Form D/E, RCEP និងការបញ្ចេញទំនិញតាមផ្លូវបៃតង\n"
+        f"• 🏭 <b>ខ្សែច្រវាក់រោងចក្រ & SEZ:</b> ទីលានកុងតឺន័រគោក (ICD) ស្តុកទូ 40ft HQ និងឃ្លាំងស្តុក Bonded\n\n"
+        f"💎 <b>ការផ្សាយស្វ័យប្រវត្តិ ៣ លើកក្នុងមួយថ្ងៃ (3x Daily Dispatches):</b>\n"
+        f"• 🌅 <b>08:00 ICT:</b> កំពង់ផែសមុទ្រ & ផ្លូវទឹក (Ocean Freight & Ports)\n"
+        f"• ☀️ <b>13:30 ICT:</b> ផ្លូវគោក ផ្លូវល្បឿនលឿន & ព្រំដែន (Trucking & Cross-Border)\n"
+        f"• 🌆 <b>18:00 ICT:</b> ផ្លូវអាកាស គយ & តំបន់សេដ្ឋកិច្ចពិសេស (Air Cargo, Customs & SEZ)\n\n"
+        f"<i>👇 សូមជ្រើសរើសមុខងារខាងក្រោមដើម្បីទទួលបានព័ត៌មានភ្លាមៗ៖</i>"
     )
 
     await update.message.reply_html(
@@ -170,7 +171,7 @@ async def send_briefing_response(bot, chat_id: int, briefing: dict, caption: str
 
     # When caption exceeds 1024 chars (common for Trilingual posts)
     short_header = (
-        f"🇰🇭 <b>HONKAI CAMBODIA LOGISTICS DISPATCH</b>\n"
+        f"🇰🇭 <b>ព័ត៌មានភស្តុភារកម្មកម្ពុជា | CAMBODIA LOGISTICS INTEL</b>\n"
         f"📌 <b>{briefing.get('category', 'Market Update')}</b>\n"
         f"📸 <i>{briefing.get('photo_title', '')} ({briefing.get('photo_location', '')})</i>"
     )

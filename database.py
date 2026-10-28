@@ -126,14 +126,14 @@ def is_post_duplicate(hash_key: str) -> bool:
         cursor.execute("SELECT id FROM intelligence_posts WHERE hash_key = ?", (hash_key,))
         return cursor.fetchone() is not None
 
-def get_recently_posted_titles(limit: int = 20) -> List[str]:
+def get_recently_posted_titles(limit: int = 30) -> List[str]:
     """Returns the list of recently posted intelligence titles to avoid duplicate topics."""
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute("SELECT title FROM intelligence_posts ORDER BY id DESC LIMIT ?", (limit,))
         return [row["title"] for row in cursor.fetchall()]
 
-def get_recently_used_photos(limit: int = 25) -> List[str]:
+def get_recently_used_photos(limit: int = 30) -> List[str]:
     """Returns recently used photo URLs to ensure every post has a different picture."""
     with get_connection() as conn:
         cursor = conn.cursor()
