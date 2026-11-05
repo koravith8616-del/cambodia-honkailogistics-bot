@@ -51,6 +51,36 @@ CURATED_ACTION_PHOTOS: Dict[str, List[Dict[str, str]]] = {
             "title": "Container Feeder Ship Mooring Operations at Sunset",
             "location": "Sihanoukville Port Outer Anchorage Area",
             "credit": "Maritime Navigation & Pilotage"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1577705998148-6da4f3963bc8?auto=format&fit=crop&w=1200&q=80",
+            "title": "Container Terminal Quayside Cranes & Feeder Berth",
+            "location": "Sihanoukville Autonomous Port (PAS) Berth 2",
+            "credit": "PAS Gantry Crane Operations"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1505705694340-019e1e335916?auto=format&fit=crop&w=1200&q=80",
+            "title": "Heavy Cargo Ship Loading at Maritime Wharf",
+            "location": "International Deep Sea Terminal Gate",
+            "credit": "Maritime Port Engineering"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1605745341112-85968b19335b?auto=format&fit=crop&w=1200&q=80",
+            "title": "Container Ship Maneuvering with Harbor Tugboat",
+            "location": "Sihanoukville Deep-Water Approach Channel",
+            "credit": "Harbor Tug & Pilot Service"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=1200&q=80",
+            "title": "Container Port Logistics Hub & Intermodal Rail-Water Links",
+            "location": "Regional Maritime Container Terminal",
+            "credit": "Intermodal Port Authority"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1520690214124-2405c5217036?auto=format&fit=crop&w=1200&q=80",
+            "title": "Offshore Anchorage & Feeder Vessel Traffic",
+            "location": "Gulf of Thailand Coastal Maritime Route",
+            "credit": "Coastal Navigation Command"
         }
     ],
     "air_cargo": [
@@ -89,6 +119,30 @@ CURATED_ACTION_PHOTOS: Dict[str, List[Dict[str, str]]] = {
             "title": "Cargo Aircraft Tarmac Operations & Container Dollies",
             "location": "International Airport Apron Cargo Terminal",
             "credit": "Aviation Ground Logistics"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1569629743817-70d8db6c323b?auto=format&fit=crop&w=1200&q=80",
+            "title": "Cargo Airplane High Loader Lifting Pallets into Main Deck",
+            "location": "Air Cargo Logistics Apron",
+            "credit": "Airport Ramp Cargo Handlers"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1529074963764-98f45c47344b?auto=format&fit=crop&w=1200&q=80",
+            "title": "Express Air Freight Sortation Center & Fast-Track Customs",
+            "location": "Airport Bonded Air Cargo Center",
+            "credit": "Air Freight Sortation Services"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1583073600538-f219abfb20bc?auto=format&fit=crop&w=1200&q=80",
+            "title": "International Air Cargo Ramp Handling & Freight Operations",
+            "location": "Phnom Penh Air Freight Logistics Terminal",
+            "credit": "Aviation Logistics Hub"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?auto=format&fit=crop&w=1200&q=80",
+            "title": "Air Freighter Nose Door Open for Heavy Cargo Loading",
+            "location": "Commercial Air Freight Runway",
+            "credit": "Heavy Air Cargo Operations"
         }
     ],
     "trucking_highway": [
@@ -127,6 +181,30 @@ CURATED_ACTION_PHOTOS: Dict[str, List[Dict[str, str]]] = {
             "title": "Container Chassis Fleet Staging Area at Inland Dry Port",
             "location": "Phnom Penh Logistics Park Terminal Depot",
             "credit": "Fleet Management & Equipment Depot"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1501700493788-fa1a4fc9fe62?auto=format&fit=crop&w=1200&q=80",
+            "title": "Long-Haul Container Haulier on National Highway Corridor",
+            "location": "National Road 4 Freight Corridor",
+            "credit": "Highway Transport Logistics"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1513026705753-bc3fffca8bf4?auto=format&fit=crop&w=1200&q=80",
+            "title": "Heavy Commercial Truck Fleet Depot & Maintenance Yard",
+            "location": "Inland Transport Operations Terminal",
+            "credit": "Commercial Truck Fleet Service"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?auto=format&fit=crop&w=1200&q=80",
+            "title": "Cross-Border Heavy Truck Approaching Border Inspection Lane",
+            "location": "Bavet International Border Logistics Terminal",
+            "credit": "Border Logistics Transport"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1616432043562-3671ea2e5242?auto=format&fit=crop&w=1200&q=80",
+            "title": "Prime Mover Hauling 40ft HQ Container on Highway",
+            "location": "Phnom Penh Logistics Bypass Corridor",
+            "credit": "Heavy Container Transport"
         }
     ],
     "factory_logistics": [
@@ -159,6 +237,24 @@ CURATED_ACTION_PHOTOS: Dict[str, List[Dict[str, str]]] = {
             "title": "Organized Staging Bay Ready for Expedited Factory Dispatch",
             "location": "Special Economic Zone Logistics Facility",
             "credit": "Distribution & Cross-Docking"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1580674285054-bed31e145f59?auto=format&fit=crop&w=1200&q=80",
+            "title": "Warehouse Forklift Pallet Stacking & Inventory Sortation",
+            "location": "Sihanoukville SEZ Bonded Logistics Center",
+            "credit": "Industrial Warehouse Operations"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1530124566582-a618bc2615dc?auto=format&fit=crop&w=1200&q=80",
+            "title": "Modern Distribution Center with High-Bay Racking",
+            "location": "Phnom Penh Dry Port Bonded Warehouse",
+            "credit": "Logistics Distribution Center"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80",
+            "title": "Industrial Manufacturing Assembly & Quality Inspection Line",
+            "location": "Cambodia Special Economic Zone Factory",
+            "credit": "Manufacturing Supply Chain"
         }
     ],
     "customs_inspection": [
@@ -185,6 +281,30 @@ CURATED_ACTION_PHOTOS: Dict[str, List[Dict[str, str]]] = {
             "title": "Customs Form D / Form E Verification & Tariff Auditing",
             "location": "ASYCUDA World Customs Single Window Office",
             "credit": "GDCE Clearance Documentation"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80",
+            "title": "General Department of Customs & Excise Trade Compliance Center",
+            "location": "Phnom Penh Customs Audit Directorate",
+            "credit": "Trade Compliance Directorate"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=1200&q=80",
+            "title": "Customs Clearance Stamp & Automated Electronic Declaration Slip",
+            "location": "GDCE Border Customs Gate",
+            "credit": "Border Customs Verification"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1554224154-26032ffc0d07?auto=format&fit=crop&w=1200&q=80",
+            "title": "Trade Compliance Review & Certificate of Origin Audit",
+            "location": "Ministry of Commerce Export Documentation",
+            "credit": "Rules of Origin Registry"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1615906655593-ad0386982a0f?auto=format&fit=crop&w=1200&q=80",
+            "title": "Electronic Seal & Cargo Tamper Inspection at Customs Gate",
+            "location": "Sihanoukville Port Customs Control Point",
+            "credit": "Customs Seal Enforcement"
         }
     ],
     "canal_waterways": [
@@ -205,6 +325,36 @@ CURATED_ACTION_PHOTOS: Dict[str, List[Dict[str, str]]] = {
             "title": "River Port Cargo Crane & Barge Moorings",
             "location": "Phnom Penh Autonomous Port (PPAP LM17) Terminal",
             "credit": "Inland Port Operations"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1200&q=80",
+            "title": "Inland Waterway River Transit & Scenic Water Channel",
+            "location": "Mekong-Bassac River Navigation Network",
+            "credit": "Inland Navigation Authority"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
+            "title": "Coastal Waterway & Sea Access Terminal Gate",
+            "location": "Kep Coastal Sea Gateway",
+            "credit": "Coastal Maritime Authority"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1559827291-72ee739d0d9a?auto=format&fit=crop&w=1200&q=80",
+            "title": "Deep Water River Navigation Channel & Waterway Buoy System",
+            "location": "Mekong River Commercial Waterway",
+            "credit": "Waterway Safety & Buoyage"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1506953823976-52e1fdc0149a?auto=format&fit=crop&w=1200&q=80",
+            "title": "River Barge Mooring & Cargo Tugboat Logistics",
+            "location": "Phnom Penh River Harbor Basin",
+            "credit": "River Tugboat Operations"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1200&q=80",
+            "title": "Inland River Waterway Lock & Infrastructure Development",
+            "location": "Cambodian Waterway Transport Corridor",
+            "credit": "Waterway Engineering Directorate"
         }
     ],
     "rate_index": [
@@ -225,56 +375,122 @@ CURATED_ACTION_PHOTOS: Dict[str, List[Dict[str, str]]] = {
             "title": "International Trade Flow & Route Optimization Network",
             "location": "CAMFFA Logistics Research & Strategy Division",
             "credit": "Freight Benchmarking & Planning"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=1200&q=80",
+            "title": "Freight Cost Index & Economic Exchange Benchmark",
+            "location": "Cambodia Transport Cost Analytics Desk",
+            "credit": "Logistics Financial Exchange"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80",
+            "title": "Real-Time Financial & Trade Metric Dashboard",
+            "location": "Global Shipping Alliance Monitor",
+            "credit": "Maritime Trade Analytics"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=1200&q=80",
+            "title": "Supply Chain Analytics & Container Turnaround Telematics",
+            "location": "Sihanoukville Port Traffic Control",
+            "credit": "Port Traffic Analytics"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1513828583688-c52646db42da?auto=format&fit=crop&w=1200&q=80",
+            "title": "Freight Container Optimization & Tracking Analytics",
+            "location": "Phnom Penh Logistics Data Center",
+            "credit": "Logistics Data Command"
+        },
+        {
+            "url": "https://images.unsplash.com/photo-1585713181935-d5f622cc2415?auto=format&fit=crop&w=1200&q=80",
+            "title": "Maritime Vessel Tracking & AIS Navigation Radar",
+            "location": "Gulf of Thailand AIS Vessel Tracking",
+            "credit": "AIS Maritime Tracking"
         }
     ]
+}
+
+# Related category fallbacks to prevent ever showing an irrelevant photo
+RELATED_BUCKET_FALLBACKS: Dict[str, List[str]] = {
+    "ocean_port": ["canal_waterways", "rate_index"],
+    "canal_waterways": ["ocean_port", "rate_index"],
+    "trucking_highway": ["factory_logistics", "customs_inspection"],
+    "factory_logistics": ["trucking_highway", "customs_inspection"],
+    "air_cargo": ["rate_index", "factory_logistics"],
+    "customs_inspection": ["factory_logistics", "rate_index"],
+    "rate_index": ["ocean_port", "trucking_highway"]
 }
 
 def get_action_photo_for_topic(category: str, keywords: Optional[str] = None, exclude_urls: Optional[List[str]] = None) -> Dict[str, str]:
     """
     Selects a highly relevant real-action logistics photo matching the category or keywords,
     guaranteeing that photos do not repeat if excluded URLs are provided.
+    Never crosses into an unrelated category (e.g. will never return an airplane for a truck).
     """
-    cat_lower = (category or "").lower()
-    kw_lower = (keywords or "").lower()
+    cat_lower = (category or "").lower().strip()
+    kw_lower = (keywords or "").lower().strip()
 
+    # 1. Direct category key matching
     target_bucket = "ocean_port"
-    if any(k in cat_lower or k in kw_lower for k in ["rate", "index", "price", "tariff", "benchmark", "cost", "analytics", "dashboard"]):
-        target_bucket = "rate_index"
-    elif any(k in cat_lower or k in kw_lower for k in ["air", "flight", "plane", "airport", "airline", "tia", "pnh", "express", "goh"]):
-        target_bucket = "air_cargo"
-    elif any(k in cat_lower or k in kw_lower for k in ["truck", "highway", "expressway", "road", "bavet", "poipet", "border", "haulage", "fleet", "chassis"]):
-        target_bucket = "trucking_highway"
-    elif any(k in cat_lower or k in kw_lower for k in ["factory", "garment", "footwear", "gft", "stuffing", "sez", "manufacturing", "warehouse", "bonded"]):
-        target_bucket = "factory_logistics"
-    elif any(k in cat_lower or k in kw_lower for k in ["custom", "gdce", "tax", "tariff", "asycuda", "inspection", "scanner", "clearance", "rcep", "origin"]):
-        target_bucket = "customs_inspection"
-    elif any(k in cat_lower or k in kw_lower for k in ["canal", "funan", "waterway", "barge", "river", "mekong"]):
-        target_bucket = "canal_waterways"
-    elif any(k in cat_lower or k in kw_lower for k in ["port", "pas", "ppap", "ocean", "sea", "container", "vessel", "feeder"]):
+    if cat_lower in CURATED_ACTION_PHOTOS:
+        target_bucket = cat_lower
+    elif any(k in cat_lower for k in ["ocean", "port", "pas", "ppap", "sea", "berth", "feeder"]):
         target_bucket = "ocean_port"
+    elif any(k in cat_lower for k in ["air", "flight", "plane", "airport", "airline", "tia", "pnh", "goh"]):
+        target_bucket = "air_cargo"
+    elif any(k in cat_lower for k in ["truck", "highway", "expressway", "road", "bavet", "poipet", "border", "haulage", "fleet", "chassis"]):
+        target_bucket = "trucking_highway"
+    elif any(k in cat_lower for k in ["factory", "garment", "footwear", "gft", "stuffing", "sez", "manufacturing", "warehouse", "bonded"]):
+        target_bucket = "factory_logistics"
+    elif any(k in cat_lower for k in ["custom", "gdce", "tax", "tariff", "asycuda", "inspection", "scanner", "clearance", "rcep", "origin"]):
+        target_bucket = "customs_inspection"
+    elif any(k in cat_lower for k in ["canal", "funan", "waterway", "barge", "river", "mekong"]):
+        target_bucket = "canal_waterways"
+    elif any(k in cat_lower for k in ["rate", "index", "price", "tariff", "benchmark", "cost", "analytics", "dashboard"]):
+        target_bucket = "rate_index"
+    else:
+        # Fallback keyword matching on title keywords
+        if any(k in kw_lower for k in ["canal", "funan", "barge", "river", "mekong"]):
+            target_bucket = "canal_waterways"
+        elif any(k in kw_lower for k in ["air", "flight", "plane", "airport", "airline", "tia", "pnh", "freighter"]):
+            target_bucket = "air_cargo"
+        elif any(k in kw_lower for k in ["truck", "expressway", "highway", "bavet", "poipet", "haulage", "chassis", "weigh"]):
+            target_bucket = "trucking_highway"
+        elif any(k in kw_lower for k in ["custom", "gdce", "asycuda", "camdx", "origin", "rcep", "duty"]):
+            target_bucket = "customs_inspection"
+        elif any(k in kw_lower for k in ["factory", "sez", "warehouse", "gft", "stuffing"]):
+            target_bucket = "factory_logistics"
+        elif any(k in kw_lower for k in ["rate", "index", "benchmark", "fuel", "diesel"]):
+            target_bucket = "rate_index"
+        else:
+            target_bucket = "ocean_port"
 
     photos = CURATED_ACTION_PHOTOS.get(target_bucket, CURATED_ACTION_PHOTOS["ocean_port"])
-    
     exclude_set = set(exclude_urls or [])
     available_photos = [p for p in photos if p["url"] not in exclude_set]
 
-    # If all photos in this specific bucket have been used recently, check across all buckets
+    # If all photos in this specific target bucket have been used recently:
     if not available_photos:
-        all_photos = [p for bucket in CURATED_ACTION_PHOTOS.values() for p in bucket]
-        available_photos = [p for p in all_photos if p["url"] not in exclude_set]
-        
-    # If still none available (all photos in the entire library have been used), pick from least recently used
+        # Check closely related fallback buckets
+        fallbacks = RELATED_BUCKET_FALLBACKS.get(target_bucket, [])
+        for fb in fallbacks:
+            fb_photos = CURATED_ACTION_PHOTOS.get(fb, [])
+            fb_available = [p for p in fb_photos if p["url"] not in exclude_set]
+            if fb_available:
+                available_photos = fb_available
+                break
+
+    # If still none available (all photos in target & related buckets have been used):
+    # Pick the photo in the target bucket that was used LONGEST AGO (least recently used)
     if not available_photos:
-        # Score by position in exclude_urls (higher index = used longer ago)
         exclude_list = list(exclude_urls or [])
         def get_age(p):
             try:
                 return exclude_list.index(p["url"])
             except ValueError:
-                return 9999
-        all_photos = [p for bucket in CURATED_ACTION_PHOTOS.values() for p in bucket]
-        all_photos_sorted = sorted(all_photos, key=get_age, reverse=True)
-        available_photos = [all_photos_sorted[0]]
+                return 999999
+        # Sort photos in target bucket: highest index in exclude_list = used longest ago
+        photos_sorted = sorted(photos, key=get_age, reverse=True)
+        available_photos = [photos_sorted[0]]
 
     selected = random.choice(available_photos)
     return selected

@@ -12,7 +12,7 @@ from database import get_recently_posted_titles, get_recently_used_photos
 
 logger = logging.getLogger(__name__)
 
-# Comprehensive 24 Cambodia Logistics Market Intelligence Scenarios
+# Comprehensive 36 Cambodia Logistics Market Intelligence Scenarios
 # Strictly focused on the Cambodian logistics market, tailored specifically for Freight Forwarders,
 # Shipping Lines, Trucking Operators, and Factory Supply Chain Executives.
 # Formatted in Khmer alongside English.
@@ -193,6 +193,91 @@ BUILTIN_INTELLIGENCE_FEEDS = [
         "source": "CAMFFA Freight Exchange & Regional Carrier Tariff Postings"
     },
 
+    {
+        "slot": "slot_morning",
+        "category": "Intra-Asia Ocean Shipping / សេវាដឹកជញ្ជូនផ្លូវសមុទ្រក្នុងតំបន់អាស៊ី",
+        "title_km": "ការពង្រីកជើងកប៉ាល់ផ្ទាល់ Intra-Asia (ចិន-កម្ពុជា-វៀតណាម) កាត់បន្ថយការផ្ទេរទំនិញនៅកំពង់ផែបន្ត",
+        "title_en": "Intra-Asia Direct Feeder Loops: Direct China-Cambodia-Vietnam Services Bypass Transshipment Hubs",
+        "summary_km": "បណ្តាញក្រុមហ៊ុនកប៉ាល់ក្នុងតំបន់អាស៊ី (RCL, SITC, CNC/CMA CGM) បានបង្កើនជើងកប៉ាល់ផ្ទាល់រវាងកំពង់ផែក្រុងព្រះសីហនុ (PAS) និងកំពង់ផែសំខាន់ៗនៅចិន (Shanghai, Ningbo, Shekou) និងវៀតណាម។ សេវាកម្មផ្ទាល់នេះជួយកាត់បន្ថយការពឹងផ្អែកលើការផ្ទេរទំនិញនៅសិង្ហបុរី និងកាត់បន្ថយរយៈពេលដឹកជញ្ជូនវត្ថុធាតុដើមកាត់ដេរ។",
+        "summary_en": "Regional carriers (RCL, SITC, CNC/CMA CGM) have augmented direct feeder loops linking Sihanoukville Autonomous Port (PAS) with key Chinese origin ports (Shanghai, Ningbo, Shekou) and Vietnam. Direct calls substantially reduce reliance on Singapore transshipment and accelerate raw material arrivals for garment manufacturers.",
+        "key_data": [
+            "Transit Time China to PAS: 5 - 7 Days direct / រយៈពេលពីចិនមក PAS ត្រឹម ៥-៧ ថ្ងៃ",
+            "Transshipment Risk: Zero feeder connection rollovers / គ្មានហានិភ័យខកជើងកប៉ាល់បន្ត",
+            "Sailing Frequency: 3-4 Direct weekly departures per alliance / ជើងចេញ ៣-៤ ដងក្នុងមួយសប្តាហ៍",
+            "Raw Material Delivery: Same-day customs clearance at PAS for green-lane factories"
+        ],
+        "impact_km": "រោងចក្រកាត់ដេរ និងស្បែកជើងទទួលបានក្រណាត់ និងគ្រឿងបន្លាស់លឿនជាងមុនពី ៣ ទៅ ៤ ថ្ងៃ ជួយកាត់បន្ថយហានិភ័យនៃការយឺតយ៉ាវខ្សែសង្វាក់ផលិតកម្ម និងកាត់បន្ថយថ្លៃដើមស្តុកទំនិញ។",
+        "impact_en": "Apparel and footwear manufacturers receive fabric, yarn, and hardware 3-4 days faster, drastically mitigating production downtime risks and reducing working capital tied up in pipeline inventory.",
+        "action_km": "ក្រុមហ៊ុនបញ្ជូនទំនិញគួរណែនាំអតិថិជននាំចូលឱ្យកក់ជើងកប៉ាល់ផ្ទាល់ (Direct Service) សម្រាប់វត្ថុធាតុដើមបន្ទាន់ ជាជាងជ្រើសរើសសេវាឆ្លងកាត់ដែលងាយប្រឈមនឹងការខកជើងនៅកំពង់ផែផ្ទេរ (Rollover)។",
+        "action_en": "Forwarders should counsel import procurement teams to prioritize direct loop routing for critical raw materials rather than transshipment options vulnerable to hub transshipment rollovers.",
+        "tags": ["#IntraAsia", "#SeaFreight", "#PAS", "#RawMaterials", "#SupplyChainSpeed", "#CAMFFA"],
+        "photo_category": "ocean_port",
+        "source": "Intra-Asia Carrier Schedules & PAS Container Traffic Directorate"
+    },
+    {
+        "slot": "slot_morning",
+        "category": "Dangerous Goods & Hazmat Handling / ការដឹកជញ្ជូនទំនិញគ្រោះថ្នាក់ (DG/IMO)",
+        "title_km": "បទប្បញ្ញត្តិ និងនីតិវិធីផ្ទុកទំនិញគ្រោះថ្នាក់ (Dangerous Goods - DG) នៅកំពង់ផែស្វយ័តក្រុងព្រះសីហនុ",
+        "title_en": "Dangerous Goods (DG / IMO Class) Handling & Storage Compliance at Sihanoukville Port (PAS)",
+        "summary_km": "កំពង់ផែស្វយ័តក្រុងព្រះសីហនុ (PAS) បានរឹតបន្តឹងការត្រួតពិនិត្យ និងការគ្រប់គ្រងកុងតឺន័រទំនិញគ្រោះថ្នាក់ (IMO Classes 2, 3, 4, 5, 6, 8, 9) ដូចជាសារធាតុគីមីសម្រាប់រោងចក្រ ថ្នាំជ្រលក់ពណ៌ និងថ្មលីចូម។ ទំនិញគ្រោះថ្នាក់មួយចំនួនត្រូវបានតម្រូវឱ្យលើកដាក់ផ្ទាល់លើរថយន្ត (Direct Truck Delivery) ដោយមិនអនុញ្ញាតឱ្យស្តុកទុកយូរក្នុងទីលានឡើយ។",
+        "summary_en": "Sihanoukville Autonomous Port (PAS) has tightened safety protocols for dangerous goods containers (IMO Classes 2, 3, 4, 5, 6, 8, 9) including factory processing chemicals, textile dyes, and lithium batteries. Specific hazard classes mandate Direct Truck Delivery (DTD) without prolonged container yard dwell time.",
+        "key_data": [
+            "Pre-Notification Deadline: 72 Hours prior to vessel arrival / ជូនដំណឹងមុន ៧២ ម៉ោង",
+            "Mandatory Docs: MSDS, Dangerous Goods Declaration (DGD), UN Packaging Certificate",
+            "Yard Dwell Limit: Maximum 24 hours for approved DG classes / ក្នុងទីលានអតិបរមា ២៤ ម៉ោង",
+            "Direct Delivery: Required for Class 2.1 gases and Class 3 flammable liquids"
+        ],
+        "impact_km": "ធានាសុវត្ថិភាពខ្ពស់បំផុតក្នុងបរិវេណកំពង់ផែ និងចៀសវាងគ្រោះថ្នាក់អគ្គិភ័យ ប៉ុន្តែទាមទារឱ្យមានការរៀបចំរថយន្តសណ្តោង និងការបង់ពន្ធគយឱ្យរួចរាល់ជាមុន ដើម្បីទទួលទំនិញភ្លាមៗពេលកប៉ាល់ចូលចត។",
+        "impact_en": "Ensures maximum terminal safety and fire prevention, but demands strict alignment between customs duty settlement and prime mover truck dispatch for immediate offloading upon vessel discharge.",
+        "action_km": "ក្រុមហ៊ុន Forwarders ត្រូវបញ្ជូនឯកសារ DGD និង MSDS ទៅកាន់ការិយាល័យសុវត្ថិភាព PAS យ៉ាងតិច ៣ ថ្ងៃមុនកប៉ាល់មកដល់ និងរៀបចំក្បួនរថយន្តសណ្តោងឱ្យបានស្រេចបាច់នៅមាត់ផែ។",
+        "action_en": "Freight forwarders must submit verified DGD declarations and full MSDS sheets to the PAS Safety & Environmental Department 72 hours prior to berthing and pre-dispatch licensed chassis.",
+        "tags": ["#DangerousGoods", "#PASPort", "#IMOCargo", "#ChemicalLogistics", "#SafetyCompliance"],
+        "photo_category": "ocean_port",
+        "source": "PAS Terminal Safety Department & International Maritime Dangerous Goods (IMDG) Code"
+    },
+    {
+        "slot": "slot_morning",
+        "category": "Demurrage & Detention Management / ការគ្រប់គ្រងថ្លៃ Demurrage និង Detention (D&D)",
+        "title_km": "យុទ្ធសាស្ត្រគ្រប់គ្រងថ្លៃពន្យារពេលទូកុងតឺន័រ (D&D Free Time) សម្រាប់ក្រុមហ៊ុននាំចូលនៅកម្ពុជា",
+        "title_en": "Container Demurrage & Detention (D&D) Guidelines: Free-Time Optimization for Cambodia Importers",
+        "summary_km": "ថ្លៃពន្យារទូកុងតឺន័រក្នុងកំពង់ផែ (Demurrage) និងក្រៅកំពង់ផែ (Detention) អាចកើនឡើងយ៉ាងឆាប់រហ័ស ប្រសិនបើដំណើរការបំពេញបែបបទគយ និងការដឹកជញ្ជូនមានការយឺតយ៉ាវ។ ជាមធ្យម ក្រុមហ៊ុនកប៉ាល់ផ្តល់រយៈពេលអនុគ្រោះ (Free Time) ចន្លោះពី ៧ ទៅ ១៤ ថ្ងៃអាស្រ័យលើកិច្ចសន្យា។",
+        "summary_en": "Container demurrage (port dwell penalty) and detention (chassis/box holding penalty) represent substantial avoidable costs for Cambodian shippers when customs clearance or factory unloading encounters delays. Standard carrier free-time allowances typically span 7 to 14 combined days.",
+        "key_data": [
+            "Standard Free Time: 7 Days (Standard dry box), 3 Days (Reefer container)",
+            "Demurrage Rates: $35 - $60 per day (Days 8-14), $70 - $120 per day (Day 15+)",
+            "Detention Surcharge: $25 - $45 per day for holding empty box beyond agreed limit",
+            "Target Free Time for SEZ Factories: 14 - 21 Combined days via forwarder volume contracts"
+        ],
+        "impact_km": "ការយឺតយ៉ាវលើឯកសារគយត្រឹមតែពីរបីថ្ងៃ អាចធ្វើឱ្យថ្លៃ D&D កើនឡើងរាប់ពាន់ដុល្លារក្នុងមួយបណ្តុំកុងតឺន័រ ដែលប៉ះពាល់យ៉ាងធ្ងន់ធ្ងរដល់ប្រាក់ចំណេញរបស់ក្រុមហ៊ុននាំចូល។",
+        "impact_en": "A minor documentation delay of just 3-5 days can escalate container detention penalties by thousands of dollars across a multi-box shipment, directly eroding import gross margins.",
+        "action_km": "ក្រុមហ៊ុនបញ្ជូនទំនិញគួរចរចាស្នើសុំរយៈពេល Free Time រួម (Combined D&D) យ៉ាងតិច ១៤ ថ្ងៃជាមួយក្រុមហ៊ុនកប៉ាល់ និងរៀបចំបែបបទគយជាមុន (Pre-clearance) មុនពេលទំនិញមកដល់ផែ។",
+        "action_en": "Forwarders must aggressively negotiate combined 14-21 day D&D packages with shipping lines during rate contracting and execute pre-clearance filings before vessels make landfall.",
+        "tags": ["#Demurrage", "#Detention", "#FreeTime", "#CostControl", "#ImportLogistics", "#CAMFFA"],
+        "photo_category": "rate_index",
+        "source": "Cambodia Association of Freight Forwarders (CAMFFA) & Ocean Carrier Port Tariffs"
+    },
+    {
+        "slot": "slot_morning",
+        "category": "Breakbulk & Project Cargo / ទំនិញទំហំធំ និងគ្រឿងចក្រគម្រោងធំៗ",
+        "title_km": "ប្រតិបត្តិការលើកដាក់ទំនិញទំហំធំ ដែកថែបសំណង់ និងគ្រឿងចក្រគម្រោងធ្ងន់ៗ (Breakbulk) នៅផែចាស់ PAS",
+        "title_en": "Breakbulk & Project Cargo Handling: Structural Steel & Heavy Machinery Operations at PAS Old Jetty",
+        "summary_km": "ការនាំចូលដែកថែបសំណង់ ម៉ាស៊ីនរោងចក្រធុនធ្ងន់ និងឧបករណ៍ថាមពលកកើតឡើងវិញ (បន្ទះសូឡា និងទួរប៊ីន) តាមរយៈចំណតផែចាស់ (Old Jetty) និងផែពហុបំណងកំពង់ផែក្រុងព្រះសីហនុ រក្សាបាននូវដំណើរការលើកដាក់យ៉ាងសកម្ម ដោយមានស្ទូចធុនធ្ងន់ (Heavy Shore Cranes) ជួយសម្រួល។",
+        "summary_en": "Inbound shipments of structural construction steel, heavy industrial production lines, and renewable energy components (solar arrays and substation transformers) via PAS Old Jetty and Multipurpose Terminal maintain active discharge operations utilizing high-tonnage mobile cranes and shore handling rigs.",
+        "key_data": [
+            "Crane Lift Capacity: Up to 100 metric tons tandem lift at PAS Multipurpose Pier",
+            "Wharf Draft at Old Jetty: 9.0 - 9.5 Meters / ជម្រៅទឹក ៩.០ - ៩.៥ ម៉ែត្រ",
+            "Storage Capacity: Over 50,000 sqm open heavy-cargo staging wharves",
+            "Surveyor Requirement: Mandatory third-party condition survey upon discharge"
+        ],
+        "impact_km": "គាំទ្រដល់គម្រោងវិនិយោគហេដ្ឋារចនាសម្ព័ន្ធធំៗ និងការសាងសង់រោងចក្រថ្មីៗនៅកម្ពុជាឱ្យដំណើរការតាមកាលវិភាគកំណត់ ដោយធានាសុវត្ថិភាព និងមិនមានការខូចខាតគ្រឿងចក្រ។",
+        "impact_en": "Directly underpins nationwide industrial infrastructure projects and factory turnkeys, ensuring mission-critical machinery and raw construction inputs arrive without physical damage.",
+        "action_km": "ក្រុមហ៊ុន Forwarders ជំនាញផ្នែក Project Cargo ត្រូវបញ្ជូនវិស្វករវាស់ទំហំផ្លូវ (Route Survey) និងរៀបចំរថយន្តសណ្តោងកង់ច្រើន (Multi-axle Hydraulic Modular Trailers) ឱ្យស្របតាមលក្ខខណ្ឌបច្ចេកទេស។",
+        "action_en": "Project cargo specialists must conduct bridge and overhead obstruction surveys along NR4/Expressway and pre-book certified multi-axle hydraulic low-bed trailers well before vessel discharge.",
+        "tags": ["#ProjectCargo", "#Breakbulk", "#HeavyLift", "#PASOldJetty", "#IndustrialLogistics"],
+        "photo_category": "ocean_port",
+        "source": "PAS Stevedoring & Heavy Lift Division & Project Cargo Logistics Association"
+    },
+
     # =========================================================================
     # SLOT 2: MIDDAY (13:30 ICT) — TRUCKING, EXPRESSWAY & CROSS-BORDER
     # =========================================================================
@@ -365,6 +450,91 @@ BUILTIN_INTELLIGENCE_FEEDS = [
         "source": "MPWT Vehicle Overload Committee & Highway Traffic Police"
     },
 
+    {
+        "slot": "slot_midday",
+        "category": "Reefer & Cold Chain Haulage / ដឹកជញ្ជូនទំនិញត្រជាក់ និងកុងតឺន័រ Reefer",
+        "title_km": "ខ្សែសង្វាក់ដឹកជញ្ជូនទំនិញរក្សាសីតុណ្ហភាពត្រជាក់ (Cold Chain Reefer Trucking) លើច្រករបៀងភ្នំពេញ-ព្រះសីហនុ",
+        "title_en": "Cold Chain Logistics: Temperature-Controlled Reefer Haulage on the Phnom Penh - Sihanoukville Corridor",
+        "summary_km": "តម្រូវការដឹកជញ្ជូនកុងតឺន័រត្រជាក់ (Reefer Containers) សម្រាប់ការនាំចេញកសិផល (ចេកអំបូងលឿង ស្វាយស្រស់) និងការនាំចូលសាច់បង្កក ឱសថ និងអាហារកែច្នៃ មានការកើនឡើងខ្លាំង។ រថយន្តសណ្តោងបំពាក់ម៉ាស៊ីនភ្លើងជំនួយ (Genset) ធានាសីតុណ្ហភាពថេរចន្លោះពី -២០°C ដល់ +១៥°C តាមតម្រូវការទំនិញ។",
+        "summary_en": "Demand for temperature-controlled reefer container haulage along the Phnom Penh - Sihanoukville corridor is expanding rapidly for fresh agricultural exports (Cavendish bananas, fresh mangoes) and imported frozen proteins, pharmaceuticals, and dairy. Fleet operators deploy active clip-on gensets ensuring continuous temperature integrity (-20°C to +15°C).",
+        "key_data": [
+            "Expressway Transit Advantage: Under 2.5 hours runtime drastically preserves shelf life",
+            "Genset Fuel Autonomy: 48 hours continuous diesel run-time per reefer unit",
+            "Pre-Trip Inspection (PTI): Mandatory 6-point check prior to factory positioning",
+            "Data Logger Verification: Real-time digital temperature telemetry during entire road leg"
+        ],
+        "impact_km": "ធានាគុណភាពកសិផលខ្មែរសម្រាប់ការនាំចេញទៅកាន់ទីផ្សារអន្តរជាតិបានស្រស់ល្អ គ្មានការខូចខាត និងជួយកាត់បន្ថយការបាត់បង់ទំនិញក្នុងពេលធ្វើដំណើរ។",
+        "impact_en": "Protects high-value agricultural exports and pharmaceutical consignments against thermal shock and spoilage, guaranteeing cargo acceptance at destination retail and wholesale markets.",
+        "action_km": "ក្រុមហ៊ុនបញ្ជូនទំនិញត្រូវតម្រូវឱ្យអ្នកបើកបរ និងក្រុមហ៊ុនរថយន្តត្រួតពិនិត្យដំណើរការម៉ាស៊ីនភ្លើង Genset និងសីតុណ្ហភាពនៅលើទូកុងតឺន័ររៀងរាល់ ២ ម៉ោងម្តង និងរក្សាទុករបាយការណ៍សីតុណ្ហភាព (Temp Log) ជាភស្តុតាង។",
+        "action_en": "Forwarders must mandate 2-hour physical temperature log checks and ensure drivers run full PTI tests with active genset certificates prior to dispatching chassis to packing houses.",
+        "tags": ["#ColdChain", "#ReeferTrucking", "#AgriLogistics", "#TemperatureControl", "#FoodSafety"],
+        "photo_category": "trucking_highway",
+        "source": "Cambodia Cold Chain Association & Reefer Fleet Monitoring Network"
+    },
+    {
+        "slot": "slot_midday",
+        "category": "Fleet Telematics & Cargo Security / ប្រព័ន្ធ GPS និងសុវត្ថិភាពទំនិញតាមផ្លូវ",
+        "title_km": "ការប្រើប្រាស់ប្រព័ន្ធផ្កាយរណប GPS និងត្រាអេឡិចត្រូនិច (E-Seals) លើរថយន្តកុងតឺន័រឆ្លងកាត់",
+        "title_en": "Fleet Telematics & E-Seals: Real-Time Cargo Visibility & Anti-Tamper Security on Transit Corridors",
+        "summary_km": "ក្រុមហ៊ុនដឹកជញ្ជូនធំៗនៅកម្ពុជា បានបំពាក់ប្រព័ន្ធតាមដានផ្កាយរណប (GPS Telematics) និងត្រាសោអេឡិចត្រូនិច (Electronic Cargo Seals / E-Seals) លើរថយន្តកុងតឺន័រទាំងអស់។ បច្ចេកវិទ្យានេះជួយតាមដានទីតាំងរថយន្តភ្លាមៗ និងផ្ញើសញ្ញាប្រកាសអាសន្នភ្លាមៗ ប្រសិនបើមានការបើកទ្វារកុងតឺន័រ ឬរថយន្តឈប់ខុសផ្លូវដែលបានកំណត់។",
+        "summary_en": "Major Cambodian trucking hauliers have implemented advanced GPS telematics and electronic anti-tamper container seals (E-Seals) across cross-border and highway fleets. The system provides minute-by-minute satellite geolocation, instant geofence deviation alerts, and unauthorized container door-opening notifications.",
+        "key_data": [
+            "Geofence Route Deviation Alert: Instant trigger if vehicle deviates >500m from corridor",
+            "E-Seal Battery Life: 30+ days continuous operational tracking with remote tamper sensor",
+            "GDCE Customs Transit Link: Integrated with customs central control room monitoring",
+            "Cargo Loss Ratio: Reduced by 98% across participating high-value electronics and apparel routes"
+        ],
+        "impact_km": "ផ្តល់ទំនុកចិត្តខ្ពស់ដល់ម៉ាកយីហោអន្តរជាតិ (International Brands) និងរោងចក្រផលិតសម្ភារៈអេឡិចត្រូនិច ព្រមទាំងជួយសម្រួលឱ្យការដឹកជញ្ជូនឆ្លងកាត់ព្រំដែនប្រព្រឹត្តទៅលឿន ដោយមិនបាច់ឈប់ត្រួតពិនិត្យញឹកញាប់។",
+        "impact_en": "Instills rigorous supply chain confidence for global footwear, luxury apparel, and electronics buyers, while enabling customs green-channel fast-track routing with minimized physical checkpoint stops.",
+        "action_km": "ក្រុមហ៊ុន Forwarders គួរជ្រើសរើសក្រុមហ៊ុនរថយន្តដែលមានប្រព័ន្ធតាមដាន GPS និង E-Seal ស្របច្បាប់ ដើម្បីអាចផ្តល់ដំណឹងតាមដានទំនិញ (Tracking Link) ផ្ទាល់ជូនអតិថិជនបាន ២៤ ម៉ោងលើ ២៤ ម៉ោង។",
+        "action_en": "Forwarders should partner exclusively with hauliers operating certified API-connected GPS and e-seal platforms, offering clients 24/7 self-service live milestone tracking links.",
+        "tags": ["#CargoSecurity", "#GPSTracking", "#ESeal", "#FleetManagement", "#SmartLogistics"],
+        "photo_category": "trucking_highway",
+        "source": "Cambodian Trucking Association (CAMTA) & Logistics Technology Council"
+    },
+    {
+        "slot": "slot_midday",
+        "category": "Multimodal Dry Ports & Hubs / មជ្ឈមណ្ឌលភស្តុភារកម្មពហុបំណង",
+        "title_km": "ការតភ្ជាប់ភស្តុភារកម្មពហុបំណង មជ្ឈមណ្ឌល PPLC (Phnom Penh Logistics Center) តភ្ជាប់ផ្លូវដែក ផ្លូវទឹក និងផ្លូវគោក",
+        "title_en": "Phnom Penh Logistics Center (PPLC): Multimodal Hub Integrating Rail, River Barge & Highway Corridors",
+        "summary_km": "ការអភិវឌ្ឍមជ្ឈមណ្ឌលភស្តុភារកម្មភ្នំពេញ (PPLC) នឹងដើរតួជាបេះដូងនៃការដឹកជញ្ជូនទំនិញពហុបំណងនៅកម្ពុជា។ មជ្ឈមណ្ឌលទំនើបនេះតភ្ជាប់ដោយផ្ទាល់ជាមួយផ្លូវដែកភាគខាងត្បូង (ភ្នំពេញ-ព្រះសីហនុ) កំពង់ផែទន្លេមេគង្គ និងបណ្តាញផ្លូវល្បឿនលឿន ជួយសម្រួលការផ្ទេរទំនិញយ៉ាងរលូន។",
+        "summary_en": "The strategic development of the Phnom Penh Logistics Center (PPLC) serves as Cambodia's premier multimodal inland hub. Integrating dedicated rail sidings connected to the Southern Railway, direct barge access to the Mekong River, and feeder links to expressways, PPLC streamlines intermodal container transfers.",
+        "key_data": [
+            "Rail Intermodal Siding: Direct on-dock container train loading to Sihanoukville Port",
+            "Bonded Warehousing: Over 100,000 sqm modern high-ceiling racked space",
+            "Container Yard Capacity: Engineered for 300,000+ TEU annual handling throughput",
+            "Turnaround Target: Sub-30 minute gate-in to gate-out container chassis servicing"
+        ],
+        "impact_km": "ជួយកាត់បន្ថយថ្លៃដើមភស្តុភារកម្មសរុបរបស់កម្ពុជា និងកាត់បន្ថយការកកស្ទះចរាចរណ៍រថយន្តធុនធ្ងន់ក្នុងរាជធានីភ្នំពេញ តាមរយៈការបង្វែរទំនិញមួយផ្នែកធំទៅដឹកតាមផ្លូវដែក និងផ្លូវទឹក។",
+        "impact_en": "Will structurally compress Cambodia's overall logistics cost ratio while de-congesting metropolitan Phnom Penh road corridors by shifting high-volume container freight onto rail and river networks.",
+        "action_km": "ក្រុមហ៊ុន Forwarders គួរត្រៀមខ្លួនប្រើប្រាស់សេវាកម្មឃ្លាំង និងទីលានពហុបំណង ដើម្បីផ្តល់ដំណោះស្រាយដឹកជញ្ជូនចម្រុះ (ផ្លូវដែក + ផ្លូវទឹក) ដែលសន្សំថ្លៃដើមជូនរោងចក្រធំៗ។",
+        "action_en": "Forwarders should evaluate future cross-docking and intermodal rail-barge options at PPLC to design blended freight models delivering structural cost savings to high-volume manufacturing clients.",
+        "tags": ["#PPLC", "#MultimodalHub", "#DryPort", "#RailFreight", "#LogisticsInfrastructure"],
+        "photo_category": "factory_logistics",
+        "source": "Ministry of Public Works and Transport & National Logistics Council"
+    },
+    {
+        "slot": "slot_midday",
+        "category": "Dry Port & Cross-Dock Operations / ទីលាន ICD និងឃ្លាំងឆ្លងកាត់ព្រំដែន",
+        "title_km": "ប្រតិបត្តិការទីលានកុងតឺន័រគោក (ICD) និងឃ្លាំង Cross-Dock នៅខេត្តស្វាយរៀង តំបន់សេដ្ឋកិច្ចពិសេសបាវិត",
+        "title_en": "Svay Rieng & Bavet Dry Port Operations: Cross-Docking & Container Staging for Border Manufacturing",
+        "summary_km": "ទីលានកុងតឺន័រគោក និងឃ្លាំង Cross-Dock នៅតំបន់បាវិត ខេត្តស្វាយរៀង (ដូចជា Manhattan SEZ, Tai Seng, និង Giga Resource) កំពុងដំណើរការយ៉ាងមមាញឹកក្នុងការផ្ទេរទំនិញរវាងរថយន្តកម្ពុជា និងរថយន្តវៀតណាម។ ការគ្រប់គ្រងទីលានប្រកបដោយប្រសិទ្ធភាពជួយឱ្យរថយន្តមិនបាច់រង់ចាំយូរនៅច្រកទ្វារព្រំដែន។",
+        "summary_en": "Inland Container Depots (ICD) and cross-dock platforms across Bavet, Svay Rieng province (including facilities within Manhattan SEZ, Tai Seng SEZ, and Giga Resource) sustain heavy operations staging export cargo and transloading goods between Cambodian and Vietnamese tractors. Rapid yard turnaround minimizes border queueing.",
+        "key_data": [
+            "Cross-Dock Cargo Turnaround: 2 - 3 hours for standard palletized dry cargo transfers",
+            "Empty Drop-off Facility: Off-dock container depot certified by 6 major regional carriers",
+            "Operating Hours: 06:00 - 22:00 daily with extended night clearance capability",
+            "Customs Sub-branch: Dedicated on-site GDCE customs presence inside SEZ zones"
+        ],
+        "impact_km": "សម្រួលដល់ខ្សែសង្វាក់ផ្គត់ផ្គង់របស់រោងចក្រផលិតកង់ គ្រឿងបន្លាស់រថយន្ត និងឧបករណ៍អេឡិចត្រូនិចនៅតាមបណ្តោយព្រំដែន ឱ្យមានភាពរលូន និងមិនមានការរអាក់រអួល។",
+        "impact_en": "Secures seamless just-in-time material flows for high-tech bicycle, automotive wire harness, and electronics clusters clustered along the Cambodia-Vietnam border corridor.",
+        "action_km": "ក្រុមហ៊ុន Forwarders គួររៀបចំកាលវិភាគផ្ទេរទំនិញនៅឃ្លាំង Cross-Dock ឱ្យបានច្បាស់លាស់ជាមួយដៃគូរថយន្តវៀតណាម ដើម្បីកាត់បន្ថយថ្លៃរង់ចាំ (Waiting Charges) និងធានាថាទំនិញទៅដល់កំពង់ផែ Cai Mep ទាន់ពេលកាត់បញ្ជី។",
+        "action_en": "Forwarders must strictly synchronize cross-dock transshipment slots with Vietnamese border carriers to eliminate standby surcharges and meet strict Cat Lai/Cai Mep port closing deadlines.",
+        "tags": ["#BavetLogistics", "#CrossDock", "#DryPort", "#SvayRieng", "#BorderLogistics", "#SEZSupplyChain"],
+        "photo_category": "trucking_highway",
+        "source": "Bavet Border Customs & Cross-Border Transport Coordination Association"
+    },
+
     # =========================================================================
     # SLOT 3: EVENING (18:00 ICT) — AIR CARGO, CUSTOMS, SEZ & TRADE COMPLIANCE
     # =========================================================================
@@ -535,7 +705,91 @@ BUILTIN_INTELLIGENCE_FEEDS = [
         "tags": ["#ReverseLogistics", "#ReExport", "#CustomsRegulations", "#DutyDrawback", "#GDCECompliance"],
         "photo_category": "customs_inspection",
         "source": "General Department of Customs and Excise Legal Affairs & Audit Department"
-    }
+    },
+    {
+        "slot": "slot_evening",
+        "category": "Customs Best Trader & AEO / វិញ្ញាបនបត្រ AEO និងពាណិជ្ជករឆ្នើម",
+        "title_km": "អត្ថប្រយោជន៍នៃកម្មវិធីពាណិជ្ជករឆ្នើម (Best Trader Group) និងវិញ្ញាបនបត្រ AEO របស់អគ្គនាយកដ្ឋានគយ និងរដ្ឋាករ (GDCE)",
+        "title_en": "GDCE Best Trader Group & Authorized Economic Operator (AEO) Accreditation: Green Lane Fast-Tracking",
+        "summary_km": "ក្រុមហ៊ុននាំចេញ-នាំចូល និងក្រុមហ៊ុនបញ្ជូនទំនិញដែលទទួលបានវិញ្ញាបនបត្រពាណិជ្ជករឆ្នើម (Best Trader) ឬ AEO ពីអគ្គនាយកដ្ឋានគយ និងរដ្ឋាករកម្ពុជា (GDCE) ទទួលបានការលើកលែងការត្រួតពិនិត្យឯកសារ និងទំនិញជាក់ស្តែង (Green Lane)។ នេះជួយឱ្យការបញ្ចេញទំនិញពីកំពង់ផែ និងព្រំដែនចំណាយពេលត្រឹមតែប៉ុន្មានម៉ោងប៉ុណ្ណោះ។",
+        "summary_en": "Exporters, importers, and forwarders accredited under the General Department of Customs and Excise (GDCE) Best Trader Group and Authorized Economic Operator (AEO) scheme enjoy preferential Green Lane processing. Eligible shipments bypass routine documentary verification and physical container devanning, enabling customs clearance within 1-2 hours.",
+        "key_data": [
+            "Physical Inspection Rate: Zero routine physical inspections for certified AEO consignments",
+            "Clearance Speed: Under 2 hours from ASYCUDA submission to cargo release",
+            "Post-Clearance Audit (PCA): Periodic compliance audits replacing at-the-border inspections",
+            "Mutual Recognition: Cambodia advancing bilateral AEO arrangements with regional trade partners"
+        ],
+        "impact_km": "ជួយកាត់បន្ថយថ្លៃដើមប្រតិបត្តិការគយយ៉ាងច្រើន និងលុបបំបាត់ការកកស្ទះនៅមាត់ច្រកទ្វារ ព្រមទាំងបង្កើនកេរ្តិ៍ឈ្មោះ និងភាពជឿជាក់របស់ក្រុមហ៊ុនក្នុងក្រសែភ្នែកដៃគូពាណិជ្ជកម្មអន្តរជាតិ។",
+        "impact_en": "Substantially lowers customs brokerage friction and terminal storage expenses while cementing operational reputation and supply chain predictability for international buyers.",
+        "action_km": "ក្រុមហ៊ុន Forwarders គួរជួយណែនាំ និងជំរុញឱ្យអតិថិជនរោងចក្រធំៗបំពេញលក្ខខណ្ឌអនុលោមភាពច្បាប់គយ ដើម្បីស្នើសុំចូលជាសមាជិក Best Trader Group ទទួលបានអត្ថប្រយោជន៍ Green Lane។",
+        "action_en": "Forwarders should proactively audit and guide compliant factory clients through the formal GDCE AEO application process to lock in priority green channel status.",
+        "tags": ["#GDCE", "#AEO", "#BestTrader", "#CustomsGreenLane", "#TradeFacilitation", "#CAMFFA"],
+        "photo_category": "customs_inspection",
+        "source": "General Department of Customs and Excise (GDCE) Risk Management & Audit Directorate"
+    },
+    {
+        "slot": "slot_evening",
+        "category": "HS Code & Customs Valuation / ចំណាត់ថ្នាក់កូដទំនិញ និងតម្លៃគិតពន្ធគយ",
+        "title_km": "នីតិវិធីស្នើសុំសេចក្តីសម្រេចជាមុនលើចំណាត់ថ្នាក់ទំនិញ (Advance Ruling on HS Code) និងតម្លៃគិតពន្ធគយ",
+        "title_en": "GDCE Advance Ruling Guidelines: Securing Pre-Arrival Certainty on HS Code Classification & Valuation",
+        "summary_km": "ដើម្បីចៀសវាងវិវាទលើការកំណត់លេខកូដទំនិញ (HS Code) និងតម្លៃគិតពន្ធគយនៅពេលទំនិញមកដល់ ម្ចាស់ទំនិញអាចដាក់ពាក្យស្នើសុំ «សេចក្តីសម្រេចជាមុន» (Advance Ruling) ពីអគ្គនាយកដ្ឋានគយ និងរដ្ឋាករកម្ពុជា (GDCE) មុនពេលនាំចូលទំនិញជាក់ស្តែង។ សេចក្តីសម្រេចនេះមានសុពលភាពស្របច្បាប់រហូតដល់ ៣ ឆ្នាំ។",
+        "summary_en": "To eliminate costly classification disputes, re-valuation penalties, or clearance delays at border checkpoints, shippers and importers can file for formal Advance Rulings on Tariff Classification (HS Code) and Customs Valuation with GDCE prior to cargo departure. Approved advance rulings remain legally binding for up to 3 years.",
+        "key_data": [
+            "Application Lead Time: Recommended 30 days prior to commercial cargo shipment",
+            "Validity Period: Up to 3 years legally binding across all Cambodian entry ports",
+            "Required Submission: Technical spec sheets, product breakdown, chemical analysis / MSDS, commercial invoice",
+            "Dispute Prevention: Completely eliminates on-arrival HS code reclassification disputes"
+        ],
+        "impact_km": "ជួយឱ្យក្រុមហ៊ុននាំចូលអាចគណនាថ្លៃដើមពន្ធគយបានត្រឹមត្រូវ ១០០% មុនពេលបញ្ជាទិញទំនិញ និងលុបបំបាត់ហានិភ័យនៃការផាកពិន័យ ឬការជាប់គាំងទំនិញនៅកំពង់ផែ។",
+        "impact_en": "Delivers 100% landed-cost certainty before procurement POs are issued and entirely safeguards importers against retrospective tariff audits or surprise duty adjustments.",
+        "action_km": "ក្រុមហ៊ុន Forwarders និងភ្នាក់ងារគយ (Customs Brokers) ត្រូវណែនាំអតិថិជនឱ្យស្នើសុំ Advance Ruling ជាមុនសម្រាប់ទំនិញថ្មីៗ ឬគ្រឿងបន្លាស់ស្មុគស្មាញ ដើម្បីធានាការបញ្ចេញទំនិញបានលឿន។",
+        "action_en": "Customs brokers and freight forwarders should mandate Advance Ruling filings for new SKU lines, complex electronics, or composite raw materials before inbound shipping orders are placed.",
+        "tags": ["#HSCode", "#AdvanceRuling", "#CustomsValuation", "#TariffCompliance", "#GDCE"],
+        "photo_category": "customs_inspection",
+        "source": "GDCE Department of Tariff and Customs Procedures & WCO Classification Standards"
+    },
+    {
+        "slot": "slot_evening",
+        "category": "Air Cargo Cold Chain & Pharma / ដឹកជញ្ជូនឱសថតាមផ្លូវអាកាស",
+        "title_km": "ឃ្លាំងត្រជាក់ស្តង់ដារឱសថ (GDP Cold Room) និងការដឹកជញ្ជូនទំនិញតាមផ្លូវអាកាសនៅអាកាសយានដ្ឋានភ្នំពេញ (PNH/TIA)",
+        "title_en": "Phnom Penh Airport (PNH/TIA) Pharma Cold Room Logistics & Good Distribution Practice (GDP)",
+        "summary_km": "ស្ថានីយទំនិញផ្លូវអាកាសនៅអាកាសយានដ្ឋានអន្តរជាតិភ្នំពេញ បានបំពាក់ឃ្លាំងរក្សាសីតុណ្ហភាពត្រជាក់ស្របតាមស្តង់ដារចែកចាយឱសថល្អ (GDP)។ ប្រព័ន្ធនេះផ្តល់សេវាថែរក្សាសីតុណ្ហភាពចន្លោះពី +២°C ដល់ +៨°C និង +១៥°C ដល់ +២៥°C សម្រាប់ឱសថ វ៉ាក់សាំង និងសារធាតុគីមីជីវសាស្ត្រដែលងាយខូចគុណភាព។",
+        "summary_en": "The cargo terminal at Phnom Penh International Airport (PNH) operates dedicated temperature-controlled cold rooms compliant with WHO Good Distribution Practice (GDP) standards. The facility maintains strict temperature zones (+2°C to +8°C cold room, and +15°C to +25°C controlled room temperature) for healthcare, vaccines, and biomedical shipments.",
+        "key_data": [
+            "Temperature Zones: Dedicated +2°C to +8°C walk-in chillers and -20°C freezer units",
+            "Tarmac Thermal Protection: Insulated pallet covers and thermal dollies for ramp transit",
+            "Customs Priority: GDCE airport customs priority release for temperature-sensitive healthcare cargo",
+            "Data Logging: Continuous multi-sensor calibrated temperature recording with cloud alert"
+        ],
+        "impact_km": "ធានាសុវត្ថិភាពខ្ពស់បំផុត និងប្រសិទ្ធភាពនៃឱសថព្យាបាលជំងឺដែលនាំចូលមកកាន់ប្រទេសកម្ពុជា ព្រមទាំងគាំទ្រដល់ការនាំចេញផលិតផលកសិកម្មមានតម្លៃខ្ពស់តាមផ្លូវអាកាស។",
+        "impact_en": "Guarantees full biomedical potency and regulatory safety for essential pharmaceuticals, vaccines, and diagnostic reagents entering Cambodia's healthcare supply chain.",
+        "action_km": "ក្រុមហ៊ុន Forwarders ត្រូវរៀបចំការស្នើសុំបញ្ចេញទំនិញជាបន្ទាន់ (Express Green Clearance) និងត្រួតពិនិត្យឧបករណ៍វាស់សីតុណ្ហភាព (Data Logger) ភ្លាមៗនៅពេលទទួលប្រគល់ទំនិញពីស្ថានីយអាកាសចរណ៍។",
+        "action_en": "Air freight forwarders handling pharmaceutical cargo must pre-arrange emergency customs pre-clearance and execute immediate on-arrival logger downloads at the tarmac handover gate.",
+        "tags": ["#AirCargo", "#PharmaLogistics", "#ColdChain", "#PNH", "#AirportCargo", "#HealthLogistics"],
+        "photo_category": "air_cargo",
+        "source": "Cambodia Airports Cargo Services & Ministry of Health Pharmaceutical Regulatory Bureau"
+    },
+    {
+        "slot": "slot_evening",
+        "category": "E-Commerce Logistics & Express Cargo / ភស្តុភារកម្មពាណិជ្ជកម្មអេឡិចត្រូនិច",
+        "title_km": "ការគ្រប់គ្រងបញ្ញើឆាប់រហ័ស (Express Air Parcels) និងការបង់ពន្ធគយលើកញ្ចប់ទំនិញ E-Commerce",
+        "title_en": "Cross-Border E-Commerce & Express Parcel Air Freight Clearances under GDCE De Minimis Regulations",
+        "summary_km": "កំណើននៃការបញ្ជាទិញទំនិញតាមប្រព័ន្ធអេឡិចត្រូនិចឆ្លងកាត់ព្រំដែន (E-Commerce) បានជំរុញឱ្យអគ្គនាយកដ្ឋានគយ និងរដ្ឋាករកម្ពុជា (GDCE) អនុវត្តប្រព័ន្ធគ្រប់គ្រងទិន្នន័យបញ្ញើទំនិញឆាប់រហ័សស្វ័យប្រវត្តិ។ កញ្ចប់ទំនិញដែលមានតម្លៃក្រោមទំហំអនុគ្រោះពន្ធ (De Minimis Threshold) ត្រូវបានបញ្ចេញយ៉ាងឆាប់រហ័ស ស្របពេលទំនិញលើសកម្រិតត្រូវបង់ពន្ធតាមប្រព័ន្ធអេឡិចត្រូនិក។",
+        "summary_en": "Surging cross-border e-commerce air parcels and express courier shipments have led GDCE to deploy specialized express customs clearance protocols at international airport hubs. Low-value consignments qualifying under de minimis thresholds receive expedited direct release, while dutiable packages are cleared via electronic data interchange (EDI).",
+        "key_data": [
+            "De Minimis Threshold: Expedited non-dutiable parcel release up to statutory limit",
+            "Express Clearance Turnaround: Same-day release for manifest-pre-screened parcels",
+            "Prohibited Goods Screening: Dual-view automated X-ray scanners and automated risk profiling",
+            "EDI Courier Integration: Seamless integration between international courier manifests and GDCE ASYCUDA"
+        ],
+        "impact_km": "ជួយឱ្យប្រជាពលរដ្ឋ និងអាជីវកម្មខ្នាតតូចនៅកម្ពុជាទទួលបានទំនិញបញ្ជាទិញពីក្រៅប្រទេសបានលឿន និងមានតម្លាភាពក្នុងការបង់ពន្ធគយស្របតាមច្បាប់។",
+        "impact_en": "Accelerates final delivery times for regional e-commerce shipments, empowering small businesses and consumers with predictable import duty assessments and fast tarmac turnaround.",
+        "action_km": "ក្រុមហ៊ុនភស្តុភារកម្មបញ្ញើទំនិញរហ័ស (Express Couriers) ត្រូវតម្រូវឱ្យម្ចាស់ទំនិញផ្តល់ព័ត៌មានលម្អិតអំពីតម្លៃ និងប្រភេទកញ្ចប់ទំនិញឱ្យបានច្បាស់លាស់មុនពេលជើងហោះហើរចុះចត ដើម្បីបញ្ចៀសការឃាត់ទុកកញ្ចប់ទំនិញ។",
+        "action_en": "Express air cargo operators must ensure overseas shippers transmit full electronic manifests with accurate itemized declarations before flights arrive to prevent parcel quarantine holds.",
+        "tags": ["#ECommerceLogistics", "#ExpressCargo", "#AirParcel", "#CustomsClearance", "#LastMile", "#GDCE"],
+        "photo_category": "air_cargo",
+        "source": "GDCE Airport Express Clearance Bureau & Express Cargo Association"
+    },
 ]
 
 class LogisticsResearchEngine:
@@ -581,7 +835,7 @@ class LogisticsResearchEngine:
                 candidates = filtered
 
         # Fetch recently posted titles from database to avoid repeating
-        recent_titles_list = get_recently_posted_titles(limit=30)
+        recent_titles_list = get_recently_posted_titles(limit=50)
         recent_titles_set = set(recent_titles_list)
         unposted = [c for c in candidates if c["title_en"] not in recent_titles_set]
 
@@ -598,7 +852,7 @@ class LogisticsResearchEngine:
             item = candidates_sorted[0]
 
         # Get recently used photo URLs to guarantee a different picture every time
-        recent_photos = get_recently_used_photos(limit=30)
+        recent_photos = get_recently_used_photos(limit=100)
         photo_info = get_action_photo_for_topic(
             category=item.get("photo_category", "ocean_port"),
             keywords=item["title_en"],
@@ -681,7 +935,7 @@ Return ONLY valid JSON without markdown fences.
                 clean_json = re.sub(r"```$", "", clean_json, flags=re.MULTILINE).strip()
                 data = json.loads(clean_json)
 
-                recent_photos = get_recently_used_photos(limit=30)
+                recent_photos = get_recently_used_photos(limit=100)
                 photo_category = data.get("photo_category", "ocean_port")
                 photo_info = get_action_photo_for_topic(photo_category, user_query, exclude_urls=recent_photos)
 
@@ -720,7 +974,7 @@ Return ONLY valid JSON without markdown fences.
         if not matched_feed:
             matched_feed = BUILTIN_INTELLIGENCE_FEEDS[0]
 
-        recent_photos = get_recently_used_photos(limit=30)
+        recent_photos = get_recently_used_photos(limit=100)
         photo_info = get_action_photo_for_topic(matched_feed.get("photo_category", "ocean_port"), user_query, exclude_urls=recent_photos)
         hash_str = f"{user_query}_{datetime.now().strftime('%Y-%m-%d_%H%M')}"
         hash_key = hashlib.md5(hash_str.encode()).hexdigest()
